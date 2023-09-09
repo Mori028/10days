@@ -11,7 +11,7 @@ Player::~Player() {
 	delete fbxModel_;
 }
 
-void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
+void Player::Initialize(DirectXCommon* dxCommon, Model* model, Input* input) {
 	// nullptrチェック
 	assert(dxCommon);
 	assert(input);
@@ -19,7 +19,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	this->dxCommon = dxCommon;
 	input_ = input;
 	camTransForm = new Transform();
-
+	model_ = model;
 	fbxModel_ = FbxLoader::GetInstance()->LoadModelFromFile("stand");
 	
 	// デバイスをセット
@@ -34,19 +34,76 @@ void Player::Initialize(DirectXCommon* dxCommon, Input* input) {
 	fbxObject3d_->wtf.position = { 0.0f,-0.3f,0.0f };
 	fbxObject3d_->wtf.scale = { 0.1f,0.1f,0.1f };
 	fbxObject3d_->PlayAnimation(1.0f,true);
+
+	object = new Object3d();
+	object->Initialize();
+	object->SetModel(model_);
+	object->wtf.position = worldPos;
+	object->wtf.scale = { 1.0f,1.0f,1.0f };
 }
 
 void Player::Update() {
-	fbxObject3d_->Update();
+	//イージング用フレーム
+	if (frame < maxframe) {
+		frame += oneframe;
+	}
+	else {
+		frame = maxframe;
+	}
+
+	//キー入力で移動
+	if (frame >= maxframe) {
+		if (input_->PushKey(DIK_A)) {
+			direction = Direction::Left;
+			frame = 0;
+			worldPos.x -= moveVal;
+		}
+		else if (input_->PushKey(DIK_D)) {
+			direction = Direction::Right;
+			frame = 0;
+			worldPos.x += moveVal;
+		}
+
+		else if (input_->PushKey(DIK_W)) {
+			direction = Direction::Up;
+			frame = 0;
+			worldPos.y += moveVal;
+		}
+		else if (input_->PushKey(DIK_S)) {
+			direction = Direction::Down;
+			frame = 0;
+			worldPos.y -= moveVal;
+		}
+	}
+
+	//移動にイージングを掛ける
+	if (direction == Direction::Left) {
+		position.x = worldPos.x + moveVal - easeOutCubic(frame / maxframe) * moveVal;
+	}
+	else if(direction == Direction::Right) {
+		position.x = worldPos.x - moveVal + easeOutCubic(frame / maxframe) * moveVal;
+	}
+	else if (direction == Direction::Up) {
+		position.y = worldPos.y - moveVal + easeOutCubic(frame / maxframe) * moveVal;
+	}
+	else if (direction == Direction::Down) {
+		position.y = worldPos.y + moveVal - easeOutCubic(frame / maxframe) * moveVal;
+	}
+
+	//fbxObject3d_->Update();
+	object->wtf.position = position;
+	object->Update();
 }
 
 void Player::Draw() {
+	//sprite->Draw();
+	object->Draw();
 	
 }
 
 void Player::FbxDraw(){
 	
-	fbxObject3d_->Draw(dxCommon->GetCommandList());
+	//fbxObject3d_->Draw(dxCommon->GetCommandList());
 }
 
 Vector3 Player::bVelocity(Vector3& velocity, Transform& worldTransform)

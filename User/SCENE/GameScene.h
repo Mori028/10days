@@ -85,7 +85,10 @@ private:	//メンバ変数
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;
 	
+	Object3d* obj[15][10];
+	Model* playerMD = nullptr;
+	Model* p = nullptr;
 	//UI
-	
+
 	//ゲームフロー
 };

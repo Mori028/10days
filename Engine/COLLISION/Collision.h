@@ -65,12 +65,12 @@ public:
 	/// <returns>åç∑ÇµÇƒÇ¢ÇÈÇ©î€Ç©</returns>
 	static bool CheckRay2Sphere(const Ray& ray, const Sphere& sphere, float* distance = nullptr, Vector3* inter = nullptr);
 
-	bool BoxCollision(Vector3 player, Vector3 enemy, Vector3 playerWidth, Vector3 enemyWidth);
+	static bool BoxCollision(Vector3 player, Vector3 enemy, Vector3 playerWidth, Vector3 enemyWidth);
 
-	bool BoxCircle(Vector3 boxPos, Vector3 circlePos, Vector3 boxWidth, float circleWidth);
+	static bool BoxCircle(Vector3 boxPos, Vector3 circlePos, Vector3 boxWidth, float circleWidth);
 
-	bool CircleCollision(Vector3 playerPos, Vector3 enemyPos, float playerWidth, float enemyWidth);
+	static bool CircleCollision(Vector3 playerPos, Vector3 enemyPos, float playerWidth, float enemyWidth);
 
-	bool CircleCollisionXZ(Vector3 playerPos, Vector3 enemyPos, float playerWidth, float enemyWidth);
+	static bool CircleCollisionXZ(Vector3 playerPos, Vector3 enemyPos, float playerWidth, float enemyWidth);
 };
 

@@ -37,6 +37,8 @@ public:
 	////ワールド座標を取得
 	Vector3 GetWorldPosition();
 
+	float GetFrame() { return frame; }
+
 	/// <summary>
 	/// ポジション
 	/// </summary>

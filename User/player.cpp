@@ -46,31 +46,28 @@ void Player::Initialize(DirectXCommon* dxCommon, Model* model, Input* input) {
 
 void Player::Reset(int map) {
 
-	if (frame >= maxframe) {
-
-		//マップ更新
-		for (int i = 0; i < 6; i++) {
-			for (int j = 0; j < 6; j++) {
-				if (map == 0) {
-					place = { 0,2 };
-					baseMap[j][i] = tutorialMap[j][i];
-				}
-				else if (map == 1) {
-					place = { 1,3 };
-					baseMap[j][i] = map1[j][i];
-				}
-				else if (map == 2) {
-					place = { 1,3 };
-					baseMap[j][i] = map2[j][i];
-				}
+	//マップ更新
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (map == 0) {
+				place = { 0,2 };
+				baseMap[j][i] = tutorialMap[j][i];
+			}
+			else if (map == 1) {
+				place = { 1,3 };
+				baseMap[j][i] = map1[j][i];
+			}
+			else if (map == 2) {
+				place = { 1,3 };
+				baseMap[j][i] = map2[j][i];
 			}
 		}
-
-		worldPos.x = (float)place.x;
-		worldPos.y = -(float)place.y;
-		position.x = worldPos.x + moveVal - easeOutCubic(frame / maxframe) * moveVal;
-		position.y = worldPos.y + moveVal - easeOutCubic(frame / maxframe) * moveVal;
 	}
+
+	worldPos.x = (float)place.x;
+	worldPos.y = -(float)place.y;
+	position.x = worldPos.x + moveVal - easeOutCubic(frame / maxframe) * moveVal;
+	position.y = worldPos.y + moveVal - easeOutCubic(frame / maxframe) * moveVal;
 }
 
 void Player::Update() {

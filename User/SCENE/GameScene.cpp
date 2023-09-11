@@ -117,17 +117,19 @@ void GameScene::Update() {
 	skydome->Update();
 
 	//マップ切り替え
-	if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
-		map++;
-		player_->Reset(map);
-	}
-	else if (input->TriggerKey(DIK_LEFT) && map > 0) {
-		map--;
-		player_->Reset(map);
-	}
-	//位置リセット
-	if (input->TriggerKey(DIK_R)) {
-		player_->Reset(map);
+	if (player_->GetFrame() >= 60) {
+		if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
+			map++;
+			player_->Reset(map);
+		}
+		else if (input->TriggerKey(DIK_LEFT) && map > 0) {
+			map--;
+			player_->Reset(map);
+		}
+		//位置リセット
+		if (input->TriggerKey(DIK_R)) {
+			player_->Reset(map);
+		}
 	}
 }
 

@@ -193,6 +193,9 @@
     <ClCompile Include="Element\ElementManager.cpp">
       <Filter>user\ソース\Element</Filter>
     </ClCompile>
+    <ClCompile Include="User\Title.cpp">
+      <Filter>user\ソース</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BASE\FPS.h">
@@ -284,6 +287,9 @@
     </ClInclude>
     <ClInclude Include="Element\ElementManager.h">
       <Filter>user\ヘッダー\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Title.h">
+      <Filter>user\ヘッダー</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

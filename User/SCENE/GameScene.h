@@ -72,6 +72,11 @@ private: // メンバ変数 (固定)
 private:	//メンバ変数
 	const float PI = 3.141592f;
 
+	//タイトル
+	Sprite* wakuSprite = new Sprite();
+
+	Sprite* setumeiSprite = new Sprite();
+
 	//カメラ
 	Camera* mainCamera = nullptr;
 	Camera* camera1 = nullptr;

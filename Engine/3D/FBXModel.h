@@ -9,8 +9,6 @@
 #include <d3dx12.h>
 #include <fbxsdk.h>
 
-
-
 // ƒm[ƒh
 struct Node
 {

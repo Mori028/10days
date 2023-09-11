@@ -35,18 +35,24 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	//スプライト共通部分の初期化
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
-
+	//外枠
 	wakuSprite->Initialize(spriteCommon);
 	wakuSprite->SetPozition({ 0,0 });
 	wakuSprite->SetSize({ 1280.0f, 720.0f });
 	spriteCommon->LoadTexture(3, "back.png");
 	wakuSprite->SetTextureIndex(3);
-
+	//ゲームルール説明
 	setumeiSprite->Initialize(spriteCommon);
 	setumeiSprite->SetPozition({ 0,0 });
 	setumeiSprite->SetSize({ 320.0f, 680.0f });
 	spriteCommon->LoadTexture(4, "setumei.png");
 	setumeiSprite->SetTextureIndex(4);
+	//タイトル
+	titleSprite->Initialize(spriteCommon);
+	titleSprite->SetPozition({ 0,0 });
+	titleSprite->SetSize({ 1280.0f, 720.0f });
+	spriteCommon->LoadTexture(5, "Title.png");
+	titleSprite->SetTextureIndex(5);
 
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
@@ -72,7 +78,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	p = Model::LoadFromOBJ("Particle");
 	playerMD = Model::LoadFromOBJ("ster");
 	player_ = new Player();
-	player_->Initialize(dxCommon, playerMD,input);
+	player_->Initialize(dxCommon, playerMD, input);
 	player_->SetCamera(mainCamera);
 
 	for (int i = 0; i < 6; i++) {
@@ -80,10 +86,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 			obj[i][j] = new Object3d();
 			obj[i][j]->SetModel(p);
 			obj[i][j]->Initialize();
-			obj[i][j]->wtf.scale = {0.1f,0.1f,0.1f};
+			obj[i][j]->wtf.scale = { 0.1f,0.1f,0.1f };
 		}
 	}
-	
+
+
+	//タイトル
+	title_ = new Title();
+	title_->Initialize(dxCommon, input);
+	title_->SetCamera(mainCamera);
+
 }
 
 void GameScene::Reset() {
@@ -94,44 +106,66 @@ void GameScene::Reset() {
 /// 毎フレーム処理
 /// </summary>
 void GameScene::Update() {
-	for (int i = 0; i < 6; i++) {
-		for (int j = 0; j < 6; j++){
-			obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
-			obj[i][j]->Update();
+	switch (sceneNo_)
+	{
+	case SceneNo::TITLE:
+		if (sceneNo_ == SceneNo::TITLE) {
+			//シーン切り替え
+			if (input->TriggerKey(DIK_SPACE) || input->ButtonInput(RT)) {
+				sceneNo_ = SceneNo::GAME;
+			}
+		}
+		break;
+	case SceneNo::GAME:
+		if (sceneNo_ == SceneNo::GAME) {
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 6; j++) {
+					obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
+					obj[i][j]->Update();
+				}
+			}
+			player_->Update();
+
+			skydome->Update();
 		}
 	}
-	player_->Update();
-
-	skydome->Update();
 }
 
 /// <summary>
 /// 描画
 /// </summary>
 void GameScene::Draw() {
-	wakuSprite->Draw();
-	setumeiSprite->Draw();
-	/// <summary>
-	/// 3Dオブジェクトの描画
-	/// ここに3Dオブジェクトの描画処理を追加できる
-	/// <summary>
-	//3Dオブジェクト描画前処理
-	Object3d::PreDraw(dxCommon->GetCommandList());
-	//// 3Dオブクジェクトの描画
-	for (int i = 0; i < 6; i++) {
-		for (int j = 0; j < 6; j++) {
-			obj[i][j]->Draw();
-		}
+	if (sceneNo_ == SceneNo::TITLE) {
+		titleSprite->Draw();
+		
+		
 	}
-	player_->Draw();
-	//skydome->Draw();
+	if (sceneNo_ == SceneNo::GAME) {
+		wakuSprite->Draw();
+		setumeiSprite->Draw();
+		/// <summary>
+		/// 3Dオブジェクトの描画
+		/// ここに3Dオブジェクトの描画処理を追加できる
+		/// <summary>
+		//3Dオブジェクト描画前処理
+		Object3d::PreDraw(dxCommon->GetCommandList());
+		//// 3Dオブクジェクトの描画
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 6; j++) {
+				obj[i][j]->Draw();
+			}
+		}
+		player_->Draw();
+		//skydome->Draw();
 
-	//3Dオブジェクト描画後処理
-	Object3d::PostDraw();
+		//3Dオブジェクト描画後処理
+		Object3d::PostDraw();
 
 
-	//// パーティクル UI FBX スプライト描画
-	//player_->FbxDraw();
+		//// パーティクル UI FBX スプライト描画
+		//player_->FbxDraw();
+	}
+	
 }
 
 Vector3 GameScene::bVelocity(Vector3& velocity, Transform& worldTransform)

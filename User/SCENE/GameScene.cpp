@@ -59,7 +59,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	HHSprite->SetSize({ 300.0f, 100.0f });
 	spriteCommon->LoadTexture(6, "HH.png");
 	HHSprite->SetTextureIndex(6);
-
+	
 	stage1Sprite->Initialize(spriteCommon);
 	stage1Sprite->SetPozition({ 350,50 });
 	stage1Sprite->SetSize({ 100.0f, 400.0f });

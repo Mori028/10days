@@ -54,6 +54,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	spriteCommon->LoadTexture(5, "Title.png");
 	titleSprite->SetTextureIndex(5);
 
+	HHSprite->Initialize(spriteCommon);
+	HHSprite->SetPozition({ 650,600 });
+	HHSprite->SetSize({ 300.0f, 100.0f });
+	spriteCommon->LoadTexture(6, "HH.png");
+	HHSprite->SetTextureIndex(6);
+	
+	stage1Sprite->Initialize(spriteCommon);
+	stage1Sprite->SetPozition({ 350,50 });
+	stage1Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(7, "stage1.png");
+	stage1Sprite->SetTextureIndex(7);
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
@@ -143,6 +154,8 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::GAME) {
 		wakuSprite->Draw();
 		setumeiSprite->Draw();
+		HHSprite->Draw();
+		stage1Sprite->Draw();
 		/// <summary>
 		/// 3Dオブジェクトの描画
 		/// ここに3Dオブジェクトの描画処理を追加できる

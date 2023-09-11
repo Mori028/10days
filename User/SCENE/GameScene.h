@@ -87,6 +87,10 @@ private:	//メンバ変数
 
 	Sprite* titleSprite = new Sprite();
 
+	Sprite* HHSprite = new Sprite();
+
+	Sprite* stage1Sprite = new Sprite();
+
 	//カメラ
 	Camera* mainCamera = nullptr;
 	Camera* camera1 = nullptr;

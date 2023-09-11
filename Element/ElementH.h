@@ -27,6 +27,10 @@ public:
 
 	void collectNmb(int Nmb);
 
+	void TrueDeath() { isDeath = true; };
+
+	bool IsDeath() { return isDeath; }
+
 private:
 
 
@@ -48,5 +52,7 @@ private:
 	Vector3 move = { 0,0,0 };
 
 	int collectKinds[3];
+
+	bool isDeath = false;
 
 };

@@ -1,4 +1,5 @@
 #include "ElementManager.h"
+#include "player.h"
 
 ElementManager::ElementManager()
 {
@@ -6,18 +7,25 @@ ElementManager::ElementManager()
 
 ElementManager::~ElementManager()
 {
+	delete elementModelH_;
+	delete elementModelC_;
+	delete elementModelN_;
+	delete elementModelO_;
 }
 
 void ElementManager::Initialize()
 {
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel_ = Model::LoadFromOBJ("C");
+	elementModelH_ = Model::LoadFromOBJ("H");
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel2_ = Model::LoadFromOBJ("H");
+	elementModelC_ = Model::LoadFromOBJ("C");
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel3_ = Model::LoadFromOBJ("N");
+	elementModelN_ = Model::LoadFromOBJ("N");
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel4_ = Model::LoadFromOBJ("O");
+	elementModelO_ = Model::LoadFromOBJ("O");
+
+	ExistenceEnemy(Vector3(-3, 0,15), 2, 1, 2);
+	ExistenceEnemy(Vector3(-5, 0, 15), 1, 2, 2);
 }
 
 void ElementManager::Update(Vector3 playerPos)
@@ -25,6 +33,7 @@ void ElementManager::Update(Vector3 playerPos)
 	for (std::unique_ptr<ElementH>& element : elements) {
 		element->Update(playerPos);
 	}
+	ElementCollision();
 }
 
 void ElementManager::Draw()
@@ -37,7 +46,7 @@ void ElementManager::Draw()
 void ElementManager::ElementCollision()
 {
 	//”»’è‘ÎÛA‚ÆB‚ÌÀ•W
-	 Vector3 posA, posB;
+	Vector3 posA, posB;
 
 	for (std::unique_ptr<ElementH>& element : elements) {
 		//Œ³‘f‚·‚×‚Ä‚Ì“–‚½‚è”»’è
@@ -52,17 +61,39 @@ void ElementManager::ElementCollision()
 			bool flagA = element->ConnectMaxElement();
 			bool flagB = element2->ConnectMaxElement();
 
-			if (Collision::CircleCollision(posB,posA, 1.0f, 1.0f)) {
+			if (Collision::CircleCollision(posB, posA, 0.5f, 0.5f)) {
 				if (flagA == false && flagB == false) {
 
-					//‚Â‚È‚ª‚Á‚½‚©‚Ç‚¤‚©‚Ì”»’è
-					element->ConnectElement();
-					element2->ConnectElement();
+					////‚Â‚È‚ª‚Á‚½‚©‚Ç‚¤‚©‚Ì”»’è
+					//element->ConnectElement();
+					//element2->ConnectElement();
 					//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
 					element->collectNmb(element2->GetElementNmb());
 					element2->collectNmb(element->GetElementNmb());
 
 				}
+			}
+		}
+	}
+	for (std::unique_ptr<ElementH>& element : elements) {
+
+		//Œ³‘f1‚ÌÀ•W
+		posA = element->GetWorldPosition();
+
+		//Œ³‘f‚Q‚ÌÀ•W
+		posB = player_->GetWorldPosition();
+
+		bool flagA = element->ConnectMaxElement();
+
+		if (Collision::CircleCollision(posB, posA, 0.5f, 0.5f)) {
+			if (flagA == false && playerConnectFlag == false) {
+
+				//‚Â‚È‚ª‚Á‚½”»’è
+				element->ConnectElement();
+				//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+				element->collectNmb(0);
+				playerConnectFlag = true;
+
 			}
 		}
 	}
@@ -136,13 +167,13 @@ void ElementManager::UpdateEnemyPopCommands()
 			float z = (float)std::atof(word.c_str());
 			//Å‘å˜AŒ‹”
 			getline(line_stream, word, ',');
-			float connectMax = (float)std::atof(word.c_str());
+			int connectMax = (int)std::atof(word.c_str());
 			//ŒÂ‘Ì¯•Ê
 			getline(line_stream, word, ',');
-			float elementNmb = (float)std::atof(word.c_str());
+			int elementNmb = (int)std::atof(word.c_str());
 			//‰½‚Ìƒ‚ƒfƒ‹‚ğg‚¤‚©
 			getline(line_stream, word, ',');
-			float elementModelNmb = (float)std::atof(word.c_str());
+			int elementModelNmb = (int)std::atof(word.c_str());
 			//“G‚ğ”­¶‚³‚¹‚é
 			ExistenceEnemy(Vector3(x, y, z), connectMax, elementNmb, elementModelNmb);
 		}
@@ -166,25 +197,38 @@ void ElementManager::UpdateEnemyPopCommands()
 	}
 }
 
-void ElementManager::ExistenceEnemy(const Vector3& EnemyPos,int connectMax,int elementNmb,int modelNmb)
+void ElementManager::ExistenceEnemy(const Vector3& EnemyPos, int connectMax, int elementNmb, int modelNmb)
 {
 	//“GƒLƒƒƒ‰‚Ì¶¬
 	std::unique_ptr<ElementH> newElement = std::make_unique<ElementH>();
 	if (modelNmb == 0) {
-		newElement->Initialize(elementModel_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb);
 	}
 	else if (modelNmb == 1) {
-		newElement->Initialize(elementModel2_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelC_, EnemyPos, connectMax, elementNmb);
 	}
 	else if (modelNmb == 2) {
-		newElement->Initialize(elementModel3_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelN_, EnemyPos, connectMax, elementNmb);
 	}
 	else if (modelNmb == 3) {
-		newElement->Initialize(elementModel4_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelO_, EnemyPos, connectMax, elementNmb);
 	}
-	
+	else {
+		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb);
+	}
+
 
 	//ƒŠƒXƒg‚É“o˜^‚·‚é
 	elements.push_back(std::move(newElement));
+}
+
+void ElementManager::Finalize()
+{
+	for (std::unique_ptr<ElementH>& element : elements) {
+		element->TrueDeath();
+	}
+	elements.remove_if([](std::unique_ptr<ElementH>& element) {
+		return element->IsDeath();
+		});
 }
 

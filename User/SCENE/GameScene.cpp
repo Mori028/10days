@@ -11,6 +11,7 @@ GameScene::GameScene() {
 /// デストラクタ
 /// </summary>
 GameScene::~GameScene() {
+
 	delete spriteCommon;
 	delete mainCamera;
 	delete camera1;
@@ -63,6 +64,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	player_->Initialize(dxCommon, playerMD,input);
 	player_->SetCamera(mainCamera);
 
+	elementMna = new ElementManager();
+	elementMna->Initialize();
+	elementMna->SetPlayer(player_);
+	
+
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
 			obj[i][j] = new Object3d();
@@ -89,8 +95,10 @@ void GameScene::Update() {
 			obj[i][j]->Update();
 		}
 	}
-	player_->Update();
 
+	player_->Update();
+	elementMna->SetPlayer(player_);
+	elementMna->Update(player_->GetWorldPosition());
 	skydome->Update();
 }
 
@@ -112,6 +120,7 @@ void GameScene::Draw() {
 		}
 	}
 	player_->Draw();
+	elementMna->Draw();
 	//skydome->Draw();
 
 	//3Dオブジェクト描画後処理

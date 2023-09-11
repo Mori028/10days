@@ -267,6 +267,9 @@
     <ClInclude Include="Engine\3D\FBXObject3d.h">
       <Filter>Engine\ヘッダーファイル\3D</Filter>
     </ClInclude>
+    <ClInclude Include="User\map.h">
+      <Filter>user\ヘッダー</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\SHADER\Sprite.hlsli">

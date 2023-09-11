@@ -7,7 +7,6 @@
 
 #include "ParticleManager.h"
 #include "Audio.h"
-
 #include "FBXModel.h"
 #include "FbxLoader.h"
 #include "FBXObject3d.h"
@@ -15,7 +14,7 @@
 
 class Player {
 public:
-	//
+	//向き
 	enum Direction {
 		Left,
 		Right,
@@ -27,6 +26,7 @@ public:
 	~Player();
 
 	void Initialize(DirectXCommon* dxCommon,Model* model, Input* input);
+	void Reset(int map);
 	void Update();
 
 	void Draw();
@@ -91,7 +91,10 @@ private:
 	float oneframe = 4.0f;
 
 	//向き
-	Direction direction = Direction::Left;
+	Direction direction = Direction::Up;
 	//移動量
 	float moveVal = 1.0f;
+	//現在のマス
+	Vector2 place = { 0,0 };
+	
 };

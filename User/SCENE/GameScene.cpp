@@ -1,5 +1,5 @@
 ﻿#include "GameScene.h"
-
+#include "map.h"
 
 /// <summary>
 	/// コンストクラタ
@@ -41,8 +41,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
-	mainCamera->SetEye({ -5,-5,5 });
-	mainCamera->SetTarget({ -5,-2,10 });
+	mainCamera->SetEye({ 2.5f,-7.0f,5 });
+	mainCamera->SetTarget({ 2.5f,-5.0f,10 });
 	mainCamera->Update();
 	ParticleManager::SetCamera(mainCamera);
 	Object3d::SetCamera(mainCamera);
@@ -53,24 +53,25 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->SetModel(skydomeMD);
 	skydome->wtf.scale = (Vector3{ 1000, 1000, 1000 });
 
-	//プレイヤー
-	spriteCommon->LoadTexture(0, "hill.png");
-	spriteCommon->LoadTexture(1, "hihill.png");
-
 	p = Model::LoadFromOBJ("Particle");
 	playerMD = Model::LoadFromOBJ("ster");
-	player_ = new Player();
-	player_->Initialize(dxCommon, playerMD,input);
-	player_->SetCamera(mainCamera);
+	block = Model::LoadFromOBJ("WoodenBox");
 
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
-			obj[i][j] = new Object3d();
-			obj[i][j]->SetModel(p);
-			obj[i][j]->Initialize();
-			obj[i][j]->wtf.scale = {0.1f,0.1f,0.1f};
+			obj[j][i] = new Object3d();
+			obj[j][i]->SetModel(p);
+			obj[j][i]->Initialize();
+			obj[j][i]->wtf.scale = {0.1f,0.1f,0.1f};
 		}
 	}
+
+	//プレイヤー
+	player_ = new Player();
+	player_->Initialize(dxCommon, playerMD,input);
+	player_->Reset(map);
+	player_->SetCamera(mainCamera);
+
 	
 }
 
@@ -85,13 +86,49 @@ void GameScene::Update() {
 
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++){
-			obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
-			obj[i][j]->Update();
+
+			//マップ更新
+			if (map == 0) {
+				baseMap[j][i] = tutorialMap[j][i];
+			}
+			else if (map == 1) {
+				baseMap[j][i] = map1[j][i];
+			}
+			else if (map == 2) {
+				baseMap[j][i] = map2[j][i];
+			}
+
+			obj[j][i]->wtf.position = { ((float)i) * 1.0f, (5.0f - (float)j) * 1.0f - 5.0f,15.0f };
+
+			if (baseMap[j][i] == 0) {
+				obj[j][i]->wtf.scale = { 0.1f,0.1f,0.1f };
+				obj[j][i]->SetModel(p);
+			}
+			if (baseMap[j][i] == 1) {
+				obj[j][i]->wtf.scale = { 0.5f,0.5f,0.5f };
+				obj[j][i]->SetModel(block);
+
+			}
+			obj[j][i]->Update();
 		}
 	}
-	player_->Update();
 
+	player_->Update();
 	skydome->Update();
+
+	//マップ切り替え
+	if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
+		map++;
+		player_->Reset(map);
+	}
+	else if (input->TriggerKey(DIK_LEFT) && map > 0) {
+		map--;
+		player_->Reset(map);
+	}
+	//位置リセット
+	if (input->TriggerKey(DIK_R)) {
+		player_->Reset(map);
+	}
 }
 
 /// <summary>
@@ -108,7 +145,7 @@ void GameScene::Draw() {
 	//// 3Dオブクジェクトの描画
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
-			obj[i][j]->Draw();
+			obj[j][i]->Draw();
 		}
 	}
 	player_->Draw();

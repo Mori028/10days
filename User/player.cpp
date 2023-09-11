@@ -1,4 +1,5 @@
 ﻿#include"player.h"
+#include "map.h"
 
 Player::Player() {
 
@@ -15,7 +16,7 @@ void Player::Initialize(DirectXCommon* dxCommon, Model* model, Input* input) {
 	// nullptrチェック
 	assert(dxCommon);
 	assert(input);
-
+	
 	this->dxCommon = dxCommon;
 	input_ = input;
 	camTransForm = new Transform();
@@ -40,9 +41,40 @@ void Player::Initialize(DirectXCommon* dxCommon, Model* model, Input* input) {
 	object->SetModel(model_);
 	object->wtf.position = worldPos;
 	object->wtf.scale = { 1.0f,1.0f,1.0f };
+	
+}
+
+void Player::Reset(int map) {
+
+	if (frame >= maxframe) {
+
+		//マップ更新
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 6; j++) {
+				if (map == 0) {
+					place = { 0,2 };
+					baseMap[j][i] = tutorialMap[j][i];
+				}
+				else if (map == 1) {
+					place = { 1,3 };
+					baseMap[j][i] = map1[j][i];
+				}
+				else if (map == 2) {
+					place = { 1,3 };
+					baseMap[j][i] = map2[j][i];
+				}
+			}
+		}
+
+		worldPos.x = (float)place.x;
+		worldPos.y = -(float)place.y;
+		position.x = worldPos.x + moveVal - easeOutCubic(frame / maxframe) * moveVal;
+		position.y = worldPos.y + moveVal - easeOutCubic(frame / maxframe) * moveVal;
+	}
 }
 
 void Player::Update() {
+
 	//イージング用フレーム
 	if (frame < maxframe) {
 		frame += oneframe;
@@ -53,27 +85,41 @@ void Player::Update() {
 
 	//キー入力で移動
 	if (frame >= maxframe) {
-		if (input_->PushKey(DIK_A)) {
-			direction = Direction::Left;
-			frame = 0;
-			worldPos.x -= moveVal;
+
+		if (input_->PushKey(DIK_A) && place.x > 0) {
+			if (baseMap[(int)place.y][(int)place.x - 1] == 0) {
+				direction = Direction::Left;
+				worldPos.x -= moveVal;
+				place.x--;
+				frame = 0;
+			}
 		}
-		else if (input_->PushKey(DIK_D)) {
-			direction = Direction::Right;
-			frame = 0;
-			worldPos.x += moveVal;
+		else if (input_->PushKey(DIK_D) && place.x < 5) {
+			if (baseMap[(int)place.y][(int)place.x + 1] == 0) {
+				direction = Direction::Right;
+				worldPos.x += moveVal;
+				place.x++;
+				frame = 0;
+			}
 		}
 
-		else if (input_->PushKey(DIK_W)) {
-			direction = Direction::Up;
-			frame = 0;
-			worldPos.y += moveVal;
+		else if (input_->PushKey(DIK_W) && place.y > 0) {
+			if (baseMap[(int)place.y - 1][(int)place.x] == 0) {
+				direction = Direction::Up;
+				worldPos.y += moveVal;
+				place.y--;
+				frame = 0;
+			}
 		}
-		else if (input_->PushKey(DIK_S)) {
-			direction = Direction::Down;
-			frame = 0;
-			worldPos.y -= moveVal;
+		else if (input_->PushKey(DIK_S) && place.y < 5) {
+			if (baseMap[(int)place.y + 1][(int)place.x] == 0) {
+				direction = Direction::Down;
+				worldPos.y -= moveVal;
+				place.y++;
+				frame = 0;
+			}
 		}
+		
 	}
 
 	//移動にイージングを掛ける
@@ -128,11 +174,11 @@ Vector3 Player::bVelocity(Vector3& velocity, Transform& worldTransform)
 
 Vector3 Player::GetWorldPosition(){
 	fbxObject3d_->wtf.UpdateMat();
-	//ワールド行列の平行移動成分
-	worldPos.x = fbxObject3d_->wtf.matWorld.m[3][0];
-	worldPos.y = fbxObject3d_->wtf.matWorld.m[3][1];
-	worldPos.z = fbxObject3d_->wtf.matWorld.m[3][2];
 
-	return worldPos;
+	Vector3 pos;
+	//ワールド行列の平行移動成分
+	pos = object->wtf.position;
+
+	return pos;
 }
 

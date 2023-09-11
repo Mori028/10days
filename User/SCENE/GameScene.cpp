@@ -70,9 +70,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
-	mainCamera->SetEye({ -5,-5,5 });
-	mainCamera->SetTarget({ -5,-2,10 });
-	mainCamera->Update();
+	
 	ParticleManager::SetCamera(mainCamera);
 	Object3d::SetCamera(mainCamera);
 	FBXObject3d::SetCamera(mainCamera);
@@ -129,6 +127,10 @@ void GameScene::Update() {
 		break;
 	case SceneNo::GAME:
 		if (sceneNo_ == SceneNo::GAME) {
+			mainCamera->SetEye({ -5,-5,5 });
+			mainCamera->SetTarget({ -5,-2,10 });
+			mainCamera->Update();
+
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 6; j++) {
 					obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
@@ -148,8 +150,7 @@ void GameScene::Update() {
 void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::TITLE) {
 		titleSprite->Draw();
-		
-		
+	
 	}
 	if (sceneNo_ == SceneNo::GAME) {
 		wakuSprite->Draw();

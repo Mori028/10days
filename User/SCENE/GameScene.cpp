@@ -36,6 +36,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	spriteCommon = new SpriteCommon;
 	spriteCommon->Initialize(dxCommon);
 
+	wakuSprite->Initialize(spriteCommon);
+	wakuSprite->SetPozition({ 0,0 });
+	wakuSprite->SetSize({ 1280.0f, 720.0f });
+	spriteCommon->LoadTexture(3, "back.png");
+	wakuSprite->SetTextureIndex(3);
+
+	setumeiSprite->Initialize(spriteCommon);
+	setumeiSprite->SetPozition({ 0,0 });
+	setumeiSprite->SetSize({ 320.0f, 680.0f });
+	spriteCommon->LoadTexture(4, "setumei.png");
+	setumeiSprite->SetTextureIndex(4);
+
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
@@ -82,7 +94,6 @@ void GameScene::Reset() {
 /// 毎フレーム処理
 /// </summary>
 void GameScene::Update() {
-
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++){
 			obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
@@ -98,7 +109,8 @@ void GameScene::Update() {
 /// 描画
 /// </summary>
 void GameScene::Draw() {
-
+	wakuSprite->Draw();
+	setumeiSprite->Draw();
 	/// <summary>
 	/// 3Dオブジェクトの描画
 	/// ここに3Dオブジェクトの描画処理を追加できる

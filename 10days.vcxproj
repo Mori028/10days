@@ -149,6 +149,7 @@
     <ClInclude Include="Engine\MATH\Vector2.h" />
     <ClInclude Include="Engine\MATH\Vector3.h" />
     <ClInclude Include="Engine\MATH\Vector4.h" />
+    <ClInclude Include="User\map.h" />
     <ClInclude Include="User\player.h" />
     <ClInclude Include="User\SCENE\GameScene.h" />
     <ClInclude Include="User\Title.h" />

@@ -282,6 +282,7 @@
     <ClInclude Include="Engine\3D\FBXObject3d.h">
       <Filter>Engine\ヘッダーファイル\3D</Filter>
     </ClInclude>
+    <ClInclude Include="User\map.h">
     <ClInclude Include="Element\ElementH.h">
       <Filter>user\ヘッダー\Element</Filter>
     </ClInclude>

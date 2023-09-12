@@ -13,9 +13,9 @@
 #include "Camera.h"
 
 #include "ParticleManager.h"
-
 #include"Player.h"
 #include "ElementManager.h"
+#include <Title.h>
 
 
 /// <summary>
@@ -73,6 +73,24 @@ private: // メンバ変数 (固定)
 private:	//メンバ変数
 	const float PI = 3.141592f;
 
+	//シーン切り替え
+	enum class SceneNo {
+		TITLE, //タイトル
+		GAME, //ゲームシーン
+	};
+	//ゲーム制作中はgameシーンにする
+	SceneNo sceneNo_ = SceneNo::TITLE;
+
+	Sprite* wakuSprite = new Sprite();
+
+	Sprite* setumeiSprite = new Sprite();
+
+	Sprite* titleSprite = new Sprite();
+
+	Sprite* HHSprite = new Sprite();
+
+	Sprite* stage1Sprite = new Sprite();
+
 	//カメラ
 	Camera* mainCamera = nullptr;
 	Camera* camera1 = nullptr;
@@ -81,6 +99,9 @@ private:	//メンバ変数
 
 	//プレイヤー
 	Player* player_ = nullptr;
+
+	//タイトル
+	Title* title_ = nullptr;
 
 	//背景や床
 	Object3d* skydome = nullptr;

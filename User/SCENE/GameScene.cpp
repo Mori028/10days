@@ -161,7 +161,7 @@ void GameScene::Draw() {
 		titleSprite->Draw();
 	
 	}
-	elementMna->Draw();
+
 	if (sceneNo_ == SceneNo::GAME) {
 		wakuSprite->Draw();
 		setumeiSprite->Draw();
@@ -180,6 +180,7 @@ void GameScene::Draw() {
 			}
 		}
 		player_->Draw();
+		elementMna->Draw();
 		//skydome->Draw();
 
 		//3Dオブジェクト描画後処理

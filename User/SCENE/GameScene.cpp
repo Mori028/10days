@@ -108,14 +108,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	player_->Reset(map);
 	player_->SetCamera(mainCamera);
 
-	
-			obj[i][j] = new Object3d();
-			obj[i][j]->SetModel(p);
-			obj[i][j]->Initialize();
-			obj[i][j]->wtf.scale = { 0.1f,0.1f,0.1f };
-		}
-	}
-
 
 	//タイトル
 	title_ = new Title();

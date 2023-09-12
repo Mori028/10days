@@ -170,12 +170,14 @@ Vector3 Player::bVelocity(Vector3& velocity, Transform& worldTransform)
 }
 
 Vector3 Player::GetWorldPosition(){
-	fbxObject3d_->wtf.UpdateMat();
 
-	Vector3 pos;
+	object->Update();
+	Vector3 world;
 	//ワールド行列の平行移動成分
-	pos = object->wtf.position;
+	world.x = object->wtf.matWorld.m[3][0];
+	world.y = object->wtf.matWorld.m[3][1];
+	world.z = object->wtf.matWorld.m[3][2];
 
-	return pos;
+	return world;
 }
 

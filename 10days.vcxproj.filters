@@ -94,6 +94,12 @@
     <Filter Include="Engine\ソースファイル\COLLISION">
       <UniqueIdentifier>{bbf9d956-63f5-4183-95fa-d75876ef7ae8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="user\ヘッダー\Element">
+      <UniqueIdentifier>{c9532a33-8220-46be-ac97-5b29cd5d65ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="user\ソース\Element">
+      <UniqueIdentifier>{4a929782-f652-400c-9048-d7b6a9879335}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -180,6 +186,15 @@
     </ClCompile>
     <ClCompile Include="Engine\3D\FBXObject3d.cpp">
       <Filter>Engine\ソースファイル\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Element\ElementH.cpp">
+      <Filter>user\ソース\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="Element\ElementManager.cpp">
+      <Filter>user\ソース\Element</Filter>
+    </ClCompile>
+    <ClCompile Include="User\Title.cpp">
+      <Filter>user\ソース</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +283,13 @@
       <Filter>Engine\ヘッダーファイル\3D</Filter>
     </ClInclude>
     <ClInclude Include="User\map.h">
+    <ClInclude Include="Element\ElementH.h">
+      <Filter>user\ヘッダー\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="Element\ElementManager.h">
+      <Filter>user\ヘッダー\Element</Filter>
+    </ClInclude>
+    <ClInclude Include="User\Title.h">
       <Filter>user\ヘッダー</Filter>
     </ClInclude>
   </ItemGroup>

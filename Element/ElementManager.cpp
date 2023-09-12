@@ -153,6 +153,7 @@ void ElementManager::UpdateEnemyPopCommands()
 			continue;
 		}
 
+
 		//POPƒRƒ}ƒ“ƒh
 		if (word.find("POP") == 0)
 		{

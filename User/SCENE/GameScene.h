@@ -14,8 +14,8 @@
 
 #include "ParticleManager.h"
 #include"Player.h"
+#include "ElementManager.h"
 #include <Title.h>
-
 
 
 /// <summary>
@@ -113,4 +113,6 @@ private:	//メンバ変数
 	//UI
 
 	//ゲームフロー
+
+	ElementManager* elementMna = nullptr;
 };

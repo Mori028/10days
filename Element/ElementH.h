@@ -14,6 +14,7 @@ public:
 
 	void Draw();
 
+
 	Vector3 GetWorldPosition() { return elementH_->wtf.position; }
 
 	bool ConnectMaxElement() { return connectMax_; }
@@ -25,6 +26,10 @@ public:
 	int GetElementNmb() { return elementNmb_; }
 
 	void collectNmb(int Nmb);
+
+	void TrueDeath() { isDeath = true; };
+
+	bool IsDeath() { return isDeath; }
 
 private:
 
@@ -47,5 +52,7 @@ private:
 	Vector3 move = { 0,0,0 };
 
 	int collectKinds[3];
+
+	bool isDeath = false;
 
 };

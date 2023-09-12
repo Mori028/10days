@@ -41,6 +41,9 @@ public:
 	//Œ³‘f‚Ì“o˜^
 	void ExistenceEnemy(const Vector3& EnemyPos, int connectMax, int elementNmb, int modelNmb);
 
+	void SetPlayer(Player* player) { player_ = player; }
+	void Finalize();
+
 private:
 
 	std::list<std::unique_ptr<ElementH>> elements;
@@ -52,14 +55,18 @@ private:
 	Camera* camera_ = nullptr;
 
 	Vector3 playerPos_;
+	Player* player_ = nullptr;
+	bool playerConnectFlag = false;
 
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel_ = nullptr;
+	Model* elementModelH_ = nullptr;
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel2_ = nullptr;
+	Model* elementModelC_ = nullptr;
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel3_ = nullptr;
+	Model* elementModelN_ = nullptr;
 	//Œ³‘fƒ‚ƒfƒ‹
-	Model* elementModel4_ = nullptr;
+	Model* elementModelO_ = nullptr;
+
+
 
 };

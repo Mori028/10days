@@ -6,6 +6,8 @@ ElementH::ElementH()
 
 ElementH::~ElementH()
 {
+	delete elementH_;
+	delete elementModel_;
 }
 
 void ElementH::Initialize(Model* elementModel,Vector3 elementPos, int connectMaxNmb, int elementNmb)
@@ -24,15 +26,16 @@ void ElementH::Initialize(Model* elementModel,Vector3 elementPos, int connectMax
 
 void ElementH::Update(Vector3 playerPos)
 {
+	Vector3 playyerPos = playerPos;
 	if (ifConnect) {
-		move = (playerPos - oldPlayerPos_);
+		move = (playyerPos - oldPlayerPos_);
 	}
 	if (connectNmb_ >= connectMaxNum_) {
-		bool connectMax_ = true;
+		connectMax_ = true;
 	}
 	elementH_->wtf.position += move;
 	elementH_->Update();
-	oldPlayerPos_ = playerPos;
+	oldPlayerPos_ = playyerPos;
 	
 }
 
@@ -47,6 +50,7 @@ void ElementH::collectNmb(int Nmb)
 		if (collectKinds[0] == elementNmb_ && elementNmb_ != Nmb) {
 			collectKinds[0] = Nmb;
 			connectNmb_++;
+			ifConnect = true;
 		}
 		else if (collectKinds[1] == elementNmb_ && elementNmb_ != Nmb && collectKinds[0] != Nmb ) {
 			collectKinds[1] = Nmb;

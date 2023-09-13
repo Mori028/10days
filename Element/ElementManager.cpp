@@ -14,7 +14,7 @@ ElementManager::~ElementManager()
 	delete elementModelO_;
 }
 
-void ElementManager::Initialize(Input* input)
+void ElementManager::Initialize(Input* input,int map)
 {
 	assert(input);
 
@@ -40,7 +40,7 @@ void ElementManager::Initialize(Input* input)
 	//Omodel_ = Model::LoadFromOBJ("Omodel");
 	
 
-	LoadEnemyPopData();
+	LoadEnemyPopData(map);
 
 	//ExistenceEnemy(Vector3(3, 0, 15), 2, 1, 2);
 	//ExistenceEnemy(Vector3(5, -3, 15), 1, 2, 2);
@@ -165,11 +165,38 @@ void ElementManager::ElementCollision()
 	}
 }
 
-void ElementManager::LoadEnemyPopData()
+void ElementManager::LoadEnemyPopData(int mapNmb)
 {
 	//ファイルを開く
 	std::ifstream file;
-	file.open("Resources/enemyPop2.csv");
+	if (mapNmb == 0) {
+		file.open("Resources/stage1.csv");
+	}
+	else if (mapNmb == 1) {
+		file.open("Resources/stage2.csv");
+	}
+	else if (mapNmb == 2) {
+		file.open("Resources/stage3.csv");
+	}
+	else if (mapNmb == 3) {
+		file.open("Resources/stage4.csv");
+	}
+	else if (mapNmb == 4) {
+		file.open("Resources/stage5.csv");
+	}
+	else if (mapNmb == 5) {
+		file.open("Resources/stage6.csv");
+	}
+	else if (mapNmb == 6) {
+		file.open("Resources/stage7.csv");
+	}
+	else if (mapNmb == 7) {
+		file.open("Resources/stage8.csv");
+	}
+	else
+	{
+		file.open("Resources/stage1.csv");
+	}
 	assert(file.is_open());
 
 	//ファイルを内容を文字列ストリームにコピー
@@ -179,11 +206,11 @@ void ElementManager::LoadEnemyPopData()
 	file.close();
 }
 
-void ElementManager::EnemyPopComandReset()
+void ElementManager::EnemyPopComandReset(int mapNmb)
 {
 	elementPop.str("");
 	elementPop.clear(std::stringstream::goodbit);
-	LoadEnemyPopData();
+	LoadEnemyPopData(mapNmb);
 }
 
 void ElementManager::UpdateEnemyPopCommands()
@@ -328,6 +355,7 @@ void ElementManager::Reset(int map)
 			}
 		}
 	}
+	EnemyPopComandReset(map);
 }
 
 bool ElementManager::ClearFlag()

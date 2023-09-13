@@ -18,7 +18,7 @@ public:
 	ElementManager();
 	~ElementManager();
 
-	void Initialize(Input* input);
+	void Initialize(Input* input, int map);
 
 	void Update(Vector3 playerPos);
 
@@ -29,10 +29,10 @@ public:
 	/// <summary>
 	/// 元素のCSVの読み込み
 	/// </summary>
-	void LoadEnemyPopData();
+	void LoadEnemyPopData(int mapNmb);
 
 	//CSVリセット
-	void EnemyPopComandReset();
+	void EnemyPopComandReset(int mapNmb);
 
 	/// <summary>
 	/// 元素のCSVの解析

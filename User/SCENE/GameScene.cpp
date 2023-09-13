@@ -44,8 +44,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	wakuSprite->SetTextureIndex(3);
 	//ゲームルール説明
 	setumeiSprite->Initialize(spriteCommon);
-	setumeiSprite->SetPozition({ 0,0 });
-	setumeiSprite->SetSize({ 320.0f, 680.0f });
+	setumeiSprite->SetPozition({ 1000,0 });
+	setumeiSprite->SetSize({ 300.0f, 720.0f });
 	spriteCommon->LoadTexture(4, "setumei.png");
 	setumeiSprite->SetTextureIndex(4);
 	//タイトル
@@ -54,18 +54,100 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	titleSprite->SetSize({ 1280.0f, 720.0f });
 	spriteCommon->LoadTexture(5, "Title.png");
 	titleSprite->SetTextureIndex(5);
-
+	//クリア
+	clearSprite->Initialize(spriteCommon);
+	clearSprite->SetPozition({ 0,0 });
+	clearSprite->SetSize({ 1280.0f, 720.0f });
+	spriteCommon->LoadTexture(20, "Clear.png");
+	clearSprite->SetTextureIndex(20);
+	//元素{
 	HHSprite->Initialize(spriteCommon);
-	HHSprite->SetPozition({ 650,600 });
+	HHSprite->SetPozition({ 500,600 });
 	HHSprite->SetSize({ 300.0f, 100.0f });
 	spriteCommon->LoadTexture(6, "HH.png");
 	HHSprite->SetTextureIndex(6);
+
+	H2OSprite->Initialize(spriteCommon);
+	H2OSprite->SetPozition({ 500,600 });
+	H2OSprite->SetSize({ 300.0f, 100.0f });
+	spriteCommon->LoadTexture(15, "H2O.png");
+	H2OSprite->SetTextureIndex(15);
+
+	H2O2Sprite->Initialize(spriteCommon);
+	H2O2Sprite->SetPozition({ 500,600 });
+	H2O2Sprite->SetSize({ 300.0f, 100.0f });
+	spriteCommon->LoadTexture(16, "H2O2.png");
+	H2O2Sprite->SetTextureIndex(16);
+
+	N2H4Sprite->Initialize(spriteCommon);
+	N2H4Sprite->SetPozition({ 500,600 });
+	N2H4Sprite->SetSize({ 300.0f, 100.0f });
+	spriteCommon->LoadTexture(17, "N2H4.png");
+	N2H4Sprite->SetTextureIndex(17);
+
+	CH4Sprite->Initialize(spriteCommon);
+	CH4Sprite->SetPozition({ 500,600 });
+	CH4Sprite->SetSize({ 300.0f, 100.0f });
+	spriteCommon->LoadTexture(18, "CH4.png");
+	CH4Sprite->SetTextureIndex(18);
+
+	CH4OSprite->Initialize(spriteCommon);
+	CH4OSprite->SetPozition({ 500,600 });
+	CH4OSprite->SetSize({ 300.0f, 100.0f });
+	spriteCommon->LoadTexture(19, "CH4O.png");
+	CH4OSprite->SetTextureIndex(19);
+	//}
 	
+	//ステージ数
 	stage1Sprite->Initialize(spriteCommon);
-	stage1Sprite->SetPozition({ 350,50 });
+	stage1Sprite->SetPozition({ 50,50 });
 	stage1Sprite->SetSize({ 100.0f, 400.0f });
 	spriteCommon->LoadTexture(7, "stage1.png");
 	stage1Sprite->SetTextureIndex(7);
+
+	stage2Sprite->Initialize(spriteCommon);
+	stage2Sprite->SetPozition({ 50,50 });
+	stage2Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(8, "stage2.png");
+	stage2Sprite->SetTextureIndex(8);
+
+	stage3Sprite->Initialize(spriteCommon);
+	stage3Sprite->SetPozition({ 50,50 });
+	stage3Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(9, "stage3.png");
+	stage3Sprite->SetTextureIndex(9);
+
+	stage4Sprite->Initialize(spriteCommon);
+	stage4Sprite->SetPozition({ 50,50 });
+	stage4Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(10, "stage4.png");
+	stage4Sprite->SetTextureIndex(10);
+
+	stage5Sprite->Initialize(spriteCommon);
+	stage5Sprite->SetPozition({ 50,50 });
+	stage5Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(11, "stage5.png");
+	stage5Sprite->SetTextureIndex(11);
+
+	stage6Sprite->Initialize(spriteCommon);
+	stage6Sprite->SetPozition({ 50,50 });
+	stage6Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(12, "stage6.png");
+	stage6Sprite->SetTextureIndex(12);
+
+	stage7Sprite->Initialize(spriteCommon);
+	stage7Sprite->SetPozition({ 50,50 });
+	stage7Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(13, "stage7.png");
+	stage7Sprite->SetTextureIndex(13);
+
+	stage8Sprite->Initialize(spriteCommon);
+	stage8Sprite->SetPozition({ 50,50 });
+	stage8Sprite->SetSize({ 100.0f, 400.0f });
+	spriteCommon->LoadTexture(14, "stage8.png");
+	stage8Sprite->SetTextureIndex(14);
+
+	
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
@@ -85,7 +167,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->wtf.scale = (Vector3{ 1000, 1000, 1000 });
 
 	p = Model::LoadFromOBJ("Particle");
-	playerMD = Model::LoadFromOBJ("ster");
+	playerMD = Model::LoadFromOBJ("H");
 	block = Model::LoadFromOBJ("WoodenBox");
 
 
@@ -139,10 +221,6 @@ void GameScene::Update() {
 		break;
 	case SceneNo::GAME:
 		if (sceneNo_ == SceneNo::GAME) {
-			mainCamera->SetEye({ 0,-9,5 });
-			mainCamera->SetTarget({ 0,-5,10 });
-			mainCamera->Update();
-
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 6; j++) {
 					obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
@@ -181,11 +259,13 @@ void GameScene::Update() {
 	//マップ切り替え
 	if (player_->GetFrame() >= 60) {
 		if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
+			stageCount++;
 			map++;
 			player_->Reset(map);
 			elementMna->Reset(map);
 		}
 		else if (input->TriggerKey(DIK_LEFT) && map > 0) {
+			stageCount--;
 			map--;
 			player_->Reset(map);
 			elementMna->Reset(map);
@@ -195,6 +275,12 @@ void GameScene::Update() {
 			player_->Reset(map);
 		}
 	}
+	if (stageCount >= 8) {
+		stageCount = 8;
+	}
+	else if (stageCount <= 0) {
+		stageCount = 1;
+	}
 			player_->Update();
 
 			skydome->Update();
@@ -203,8 +289,6 @@ void GameScene::Update() {
 			elementMna->Update(player_->GetWorldPosition());
 		}
 	}
-
-
 }
 
 /// <summary>
@@ -220,8 +304,38 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::GAME) {
 		wakuSprite->Draw();
 		setumeiSprite->Draw();
-		HHSprite->Draw();
-		stage1Sprite->Draw();
+		if (stageCount == 1) {
+			HHSprite->Draw();
+			stage1Sprite->Draw();
+		}
+		else if (stageCount == 2) {
+			H2OSprite->Draw();
+			stage2Sprite->Draw();
+		}
+		else if (stageCount == 3) {
+			H2O2Sprite->Draw();
+			stage3Sprite->Draw();
+		}
+		else if (stageCount == 4) {
+			H2OSprite->Draw();
+			stage4Sprite->Draw();
+		}
+		else if (stageCount == 5) {
+			H2O2Sprite->Draw();
+			stage5Sprite->Draw();
+		}
+		else if (stageCount == 6) {
+			N2H4Sprite->Draw();
+			stage6Sprite->Draw();
+		}
+		else if (stageCount == 7) {
+			CH4Sprite->Draw();
+			stage7Sprite->Draw();
+		}
+		else if (stageCount == 8) {
+			CH4OSprite->Draw();
+			stage8Sprite->Draw();
+		}
 		/// <summary>
 		/// 3Dオブジェクトの描画
 		/// ここに3Dオブジェクトの描画処理を追加できる
@@ -240,7 +354,10 @@ void GameScene::Draw() {
 
 		//3Dオブジェクト描画後処理
 		Object3d::PostDraw();
-
+		//クリア
+		if (Clearflag == 1) {
+			clearSprite->Draw();
+		}
 
 		//// パーティクル UI FBX スプライト描画
 		//player_->FbxDraw();

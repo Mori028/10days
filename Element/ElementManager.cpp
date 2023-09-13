@@ -27,6 +27,30 @@ void ElementManager::Initialize(Input* input)
 	elementModelN_ = Model::LoadFromOBJ("N");
 	//Œ³‘fƒ‚ƒfƒ‹
 	elementModelO_ = Model::LoadFromOBJ("O");
+	//H
+	Hmodel_ = Model::LoadFromOBJ("Hmodel");
+	HObj_ = Object3d::Create();
+	HObj_->SetModel(Hmodel_);
+	HObj_->wtf.position = { 0,0,0 };
+	HObj_->wtf.scale = { 1.0f,1.0f,1.0f };
+	//C
+	Cmodel_ = Model::LoadFromOBJ("Cmodel");
+	CObj_ = Object3d::Create();
+	CObj_->SetModel(Hmodel_);
+	CObj_->wtf.position = { 0,0,0 };
+	CObj_->wtf.scale = { 1.0f,1.0f,1.0f };
+	//N
+	Nmodel_ = Model::LoadFromOBJ("Nmodel");
+	NObj_ = Object3d::Create();
+	NObj_->SetModel(Hmodel_);
+	NObj_->wtf.position = { 0,0,0 };
+	NObj_->wtf.scale = { 1.0f,1.0f,1.0f };
+	//O
+	Omodel_ = Model::LoadFromOBJ("Omodel");
+	OObj_ = Object3d::Create();
+	OObj_->SetModel(Hmodel_);
+	OObj_->wtf.position = { 0,0,0 };
+	OObj_->wtf.scale = { 1.0f,1.0f,1.0f };
 
 	LoadEnemyPopData();
 
@@ -47,6 +71,7 @@ void ElementManager::Update(Vector3 playerPos)
 	for (std::unique_ptr<ElementH>& element : elements) {
 		element->Update(playerPos, hitWall);
 	}
+	
 	ElementCollision();
 	UpdateEnemyPopCommands();
 	aa = ClearFlag();

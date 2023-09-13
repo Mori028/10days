@@ -159,8 +159,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
-	mainCamera->SetEye({ -5.0f,-2.0f,5 });
-	mainCamera->SetTarget({ -5.0f,-0.0f,10 });
+	mainCamera->SetEye({ 2.5f,-3.0f,4 });
+	mainCamera->SetTarget({ 2.5f,-3.0f,10 });
 	mainCamera->Update();
 	
 	ParticleManager::SetCamera(mainCamera);

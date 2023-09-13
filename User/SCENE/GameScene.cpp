@@ -210,7 +210,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	elementMna = new ElementManager();
 	elementMna->Initialize(input, map);
 	elementMna->SetPlayer(player_);
-	elementMna->Reset(map);
+	elementMna->Reset(map, stageNmb);
 
 	//タイトル
 	title_ = new Title();
@@ -276,7 +276,7 @@ void GameScene::Update() {
 			pSourceVoice[0]->SetVolume(0.3f);
 			soundCheckFlag = 1;
 		}
-		
+
 		if (input->TriggerKey(DIK_A)) {
 			if (stageNmb > 0) {
 				selectCount--;
@@ -306,7 +306,7 @@ void GameScene::Update() {
 			pSourceVoice[1] = audio->PlayWave("open.wav");
 			pSourceVoice[1]->SetVolume(0.4f);
 			soundCheckFlag2 = 1;
-			
+
 			sceneNo_ = SceneNo::GAME;
 		}
 		break;
@@ -373,17 +373,19 @@ void GameScene::Update() {
 				sceneNo_ = SceneNo::CLEAR;
 			}
 		}
+		if (input->TriggerKey(DIK_L)) {
+			sceneNo_ = SceneNo::STAGESELECT;
+		}
 		break;
 	case SceneNo::CLEAR:
 		if (sceneNo_ == SceneNo::CLEAR) {
 			player_->Reset(map);
-			elementMna->Reset(map);
+			elementMna->Reset(map,stageNmb);
 			elementMna->Update(player_->GetWorldPosition());
 			if (input->TriggerKey(DIK_SPACE)) {
 
-
-			if (input->TriggerKey(DIK_L)) {
 				sceneNo_ = SceneNo::STAGESELECT;
+				
 			}
 		}
 	}
@@ -479,15 +481,16 @@ void GameScene::Draw() {
 
 		//3Dオブジェクト描画後処理
 		Object3d::PostDraw();
-		//クリア
-		if (Clearflag == 1) {
-			clearSprite->Draw();
-		}
 
 		//// パーティクル UI FBX スプライト描画
 		//player_->FbxDraw();
 	}
+	if (sceneNo_ == SceneNo::CLEAR) {
+		
+		clearSprite->Draw();
+		
 
+	}
 }
 
 Vector3 GameScene::bVelocity(Vector3& velocity, Transform& worldTransform)

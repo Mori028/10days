@@ -292,6 +292,18 @@ void ElementManager::ExistenceEnemy(const Vector3& EnemyPos, int connectMax, int
 	else if (modelNmb == 3) {
 		newElement->Initialize(elementModelC_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
+	else if (modelNmb == 4) {
+		newElement->Initialize(Hmodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 5) {
+		newElement->Initialize(Omodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 6) {
+		newElement->Initialize(Nmodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 7) {
+		newElement->Initialize(Cmodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
 	else {
 		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}

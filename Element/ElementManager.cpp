@@ -20,37 +20,25 @@ void ElementManager::Initialize(Input* input,int map)
 
 	input_ = input;
 	//Œ³‘fƒ‚ƒfƒ‹
-	elementModelH_ = Model::LoadFromOBJ("H");
+	elementModelH_ = Model::LoadFromOBJ("Hmodel");
 	//Œ³‘fƒ‚ƒfƒ‹
-	elementModelC_ = Model::LoadFromOBJ("C");
+	elementModelC_ = Model::LoadFromOBJ("Cmodel");
 	//Œ³‘fƒ‚ƒfƒ‹
-	elementModelN_ = Model::LoadFromOBJ("N");
+	elementModelN_ = Model::LoadFromOBJ("Nmodel");
 	//Œ³‘fƒ‚ƒfƒ‹
-	elementModelO_ = Model::LoadFromOBJ("O");
+	elementModelO_ = Model::LoadFromOBJ("Omodel");
 	//H
-	Hmodel_ = Model::LoadFromOBJ("Hmodel");
-	HObj_ = Object3d::Create();
-	HObj_->SetModel(Hmodel_);
-	HObj_->wtf.position = { 0,0,0 };
-	HObj_->wtf.scale = { 1.0f,1.0f,1.0f };
-	//C
-	Cmodel_ = Model::LoadFromOBJ("Cmodel");
-	CObj_ = Object3d::Create();
-	CObj_->SetModel(Hmodel_);
-	CObj_->wtf.position = { 0,0,0 };
-	CObj_->wtf.scale = { 1.0f,1.0f,1.0f };
-	//N
-	Nmodel_ = Model::LoadFromOBJ("Nmodel");
-	NObj_ = Object3d::Create();
-	NObj_->SetModel(Hmodel_);
-	NObj_->wtf.position = { 0,0,0 };
-	NObj_->wtf.scale = { 1.0f,1.0f,1.0f };
-	//O
-	Omodel_ = Model::LoadFromOBJ("Omodel");
-	OObj_ = Object3d::Create();
-	OObj_->SetModel(Hmodel_);
-	OObj_->wtf.position = { 0,0,0 };
-	OObj_->wtf.scale = { 1.0f,1.0f,1.0f };
+	//Hmodel_ = Model::LoadFromOBJ("Hmodel");
+	//
+	////C
+	//Cmodel_ = Model::LoadFromOBJ("Cmodel");
+	//
+	////N
+	//Nmodel_ = Model::LoadFromOBJ("Nmodel");
+	//
+	////O
+	//Omodel_ = Model::LoadFromOBJ("Omodel");
+	
 
 	LoadEnemyPopData(map);
 
@@ -318,6 +306,18 @@ void ElementManager::ExistenceEnemy(const Vector3& EnemyPos, int connectMax, int
 	}
 	else if (modelNmb == 3) {
 		newElement->Initialize(elementModelC_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 4) {
+		newElement->Initialize(Hmodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 5) {
+		newElement->Initialize(Omodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 6) {
+		newElement->Initialize(Nmodel_, EnemyPos, connectMax, elementNmb, input_, map_);
+	}
+	else if (modelNmb == 7) {
+		newElement->Initialize(Cmodel_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
 	else {
 		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb, input_, map_);

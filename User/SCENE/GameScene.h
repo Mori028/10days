@@ -73,6 +73,12 @@ private: // メンバ変数 (固定)
 private:	//メンバ変数
 	const float PI = 3.141592f;
 
+	//音関係まとめ
+	int soundCheckFlag = 0;
+	int soundCheckFlag2 = 0;
+	int soundCheckFlag3 = 0;
+	int soundCheckFlag4 = 0;
+
 	//シーン切り替え
 	enum class SceneNo {
 		TITLE, //タイトル
@@ -86,6 +92,8 @@ private:	//メンバ変数
 	Sprite* wakuSprite = new Sprite();
 
 	Sprite* setumeiSprite = new Sprite();
+
+	Sprite* sousaSprite = new Sprite();
 
 	Sprite* titleSprite = new Sprite();
 

@@ -48,6 +48,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	setumeiSprite->SetSize({ 300.0f, 720.0f });
 	spriteCommon->LoadTexture(4, "setumei.png");
 	setumeiSprite->SetTextureIndex(4);
+	//操作説明
+	sousaSprite->Initialize(spriteCommon);
+	sousaSprite->SetPozition({ 30,600 });
+	sousaSprite->SetSize({ 200.0f, 100.0f });
+	spriteCommon->LoadTexture(21, "sousa.png");
+	sousaSprite->SetTextureIndex(21);
 	//タイトル
 	titleSprite->Initialize(spriteCommon);
 	titleSprite->SetPozition({ 0,0 });
@@ -153,8 +159,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
-	mainCamera->SetEye({ 2.0f,-3.0f,0 });
-	mainCamera->SetTarget({ 2.0f,-3.0f,10 });
+
+	mainCamera->SetEye({ 2.5f,-3.0f,4 });
+	mainCamera->SetTarget({ 2.5f,-3.0f,10 });
 	mainCamera->Update();
 
 	ParticleManager::SetCamera(mainCamera);
@@ -198,6 +205,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	title_->Initialize(dxCommon, input);
 	title_->SetCamera(mainCamera);
 
+	audio = new Audio();
+	audio->Initialize();
+	audio->LoadWave("Title.wav");
+	audio->LoadWave("game.wav");
+	audio->LoadWave("open.wav");
+	audio->LoadWave("clear.wav");
 }
 
 void GameScene::Reset() {
@@ -213,9 +226,26 @@ void GameScene::Update() {
 	{
 	case SceneNo::TITLE:
 		if (sceneNo_ == SceneNo::TITLE) {
+			if (soundCheckFlag == 0) {
+				//タイトルBGM再生
+
+				pSourceVoice[0] = audio->PlayWave("Title.wav");
+				pSourceVoice[0]->SetVolume(0.3f);
+				soundCheckFlag = 1;
+			}
+			
 			//シーン切り替え
 			if (input->TriggerKey(DIK_SPACE) || input->ButtonInput(RT)) {
 				sceneNo_ = SceneNo::STAGESELECT;
+
+				if (soundCheckFlag2 == 0) {
+					//タイトルBGM再生
+
+					pSourceVoice[1] = audio->PlayWave("open.wav");
+					pSourceVoice[1]->SetVolume(0.4f);
+					soundCheckFlag2 = 1;
+				}
+
 			}
 		}
 		break;
@@ -246,6 +276,20 @@ void GameScene::Update() {
 		break;
 	case SceneNo::GAME:
 		if (sceneNo_ == SceneNo::GAME) {
+
+			//タイトルの音楽を止める
+			pSourceVoice[0]->Stop();
+			soundCheckFlag = 0;
+
+
+			if (soundCheckFlag3 == 0) {
+				//ゲームBGM再生
+
+				pSourceVoice[2] = audio->PlayWave("game.wav");
+				pSourceVoice[2]->SetVolume(0.5f);
+				soundCheckFlag3 = 1;
+			}
+
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 6; j++) {
 					obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
@@ -329,6 +373,7 @@ void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::GAME) {
 		wakuSprite->Draw();
 		setumeiSprite->Draw();
+		sousaSprite->Draw();
 		if (stageCount == 1) {
 			HHSprite->Draw();
 			stage1Sprite->Draw();

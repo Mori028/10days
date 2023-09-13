@@ -50,6 +50,8 @@ public:
 	float easeOutCubic(float x) {
 		return 1 - (float)pow(1 - x, 3);
 	}
+
+	Vector2 GatPlace() { return place; }
 public:
 	//音を止める関数
 	IXAudio2SourceVoice* pSourceVoice[10] = { 0 };

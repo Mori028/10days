@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include "Input.h"
 
 class Player;
 class ElementManager
@@ -17,7 +18,7 @@ public:
 	ElementManager();
 	~ElementManager();
 
-	void Initialize();
+	void Initialize(Input* input);
 
 	void Update(Vector3 playerPos);
 
@@ -44,6 +45,12 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	void Finalize();
 
+	void Reset(int map);
+
+	bool ClearFlag();
+
+	void ElementWallColl();
+
 private:
 
 	std::list<std::unique_ptr<ElementH>> elements;
@@ -67,6 +74,19 @@ private:
 	//Œ³‘fƒ‚ƒfƒ‹
 	Model* elementModelO_ = nullptr;
 
+	Input* input_ = nullptr;
 
+	int map_ = 0;
 
+	bool hitWall = false;
+	
+	bool clearFlag = false;
+
+	bool aa = false;
+
+	float maxframe = 60.0f;
+	float frame = maxframe;
+	float oneframe = 4.0f;
+
+	bool elementWall = false;
 };

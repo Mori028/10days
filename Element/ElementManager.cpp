@@ -1,5 +1,6 @@
 #include "ElementManager.h"
 #include "player.h"
+#include "map.h"
 
 ElementManager::ElementManager()
 {
@@ -13,8 +14,11 @@ ElementManager::~ElementManager()
 	delete elementModelO_;
 }
 
-void ElementManager::Initialize()
+void ElementManager::Initialize(Input* input)
 {
+	assert(input);
+
+	input_ = input;
 	//Œ³‘fƒ‚ƒfƒ‹
 	elementModelH_ = Model::LoadFromOBJ("H");
 	//Œ³‘fƒ‚ƒfƒ‹
@@ -24,16 +28,28 @@ void ElementManager::Initialize()
 	//Œ³‘fƒ‚ƒfƒ‹
 	elementModelO_ = Model::LoadFromOBJ("O");
 
-	ExistenceEnemy(Vector3(-3, 0,15), 2, 1, 2);
-	ExistenceEnemy(Vector3(-5, 0, 15), 1, 2, 2);
+	LoadEnemyPopData();
+
+	//ExistenceEnemy(Vector3(3, 0, 15), 2, 1, 2);
+	//ExistenceEnemy(Vector3(5, -3, 15), 1, 2, 2);
 }
 
 void ElementManager::Update(Vector3 playerPos)
 {
+	hitWall = false;
+	ElementWallColl();
 	for (std::unique_ptr<ElementH>& element : elements) {
-		element->Update(playerPos);
+		element->WallUpdate();
+		if (element->BlockMove()) {
+			hitWall = true;
+		}
+	}
+	for (std::unique_ptr<ElementH>& element : elements) {
+		element->Update(playerPos, hitWall, elementWall);
 	}
 	ElementCollision();
+	UpdateEnemyPopCommands();
+	aa = ClearFlag();
 }
 
 void ElementManager::Draw()
@@ -46,31 +62,47 @@ void ElementManager::Draw()
 void ElementManager::ElementCollision()
 {
 	//”»’è‘ÎÛA‚ÆB‚ÌÀ•W
-	Vector3 posA, posB;
+	Vector2 posA, posB;
 
 	for (std::unique_ptr<ElementH>& element : elements) {
 		//Œ³‘f‚·‚×‚Ä‚Ì“–‚½‚è”»’è
 		for (const std::unique_ptr<ElementH>& element2 : elements) {
+			if (element != element2) {
+				//Œ³‘f1‚ÌÀ•W
+				posA = element->GetPlace();
 
-			//Œ³‘f1‚ÌÀ•W
-			posA = element->GetWorldPosition();
+				//Œ³‘f‚Q‚ÌÀ•W
+				posB = element2->GetPlace();
 
-			//Œ³‘f‚Q‚ÌÀ•W
-			posB = element2->GetWorldPosition();
+				bool flagA = element->ConnectMaxElement();
+				bool flagB = element2->ConnectMaxElement();
 
-			bool flagA = element->ConnectMaxElement();
-			bool flagB = element2->ConnectMaxElement();
+				bool flagC = element->GetMoveOn();
+				bool flagD = element2->GetMoveOn();
 
-			if (Collision::CircleCollision(posB, posA, 0.5f, 0.5f)) {
 				if (flagA == false && flagB == false) {
+					if (posA.y + 1 == posB.y && posA.x == posB.x) {
+						//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+						element->collectNmb(element2->GetElementNmb());
+						element2->collectNmb(element->GetElementNmb());
+					}
+					if (posA.y - 1 == posB.y && posA.x == posB.x) {
+						//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+						element->collectNmb(element2->GetElementNmb());
+						element2->collectNmb(element->GetElementNmb());
+					}
 
-					////‚Â‚È‚ª‚Á‚½‚©‚Ç‚¤‚©‚Ì”»’è
-					//element->ConnectElement();
-					//element2->ConnectElement();
-					//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
-					element->collectNmb(element2->GetElementNmb());
-					element2->collectNmb(element->GetElementNmb());
 
+					if (posA.y == posB.y && posA.x + 1 == posB.x) {
+						//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+						element->collectNmb(element2->GetElementNmb());
+						element2->collectNmb(element->GetElementNmb());
+					}
+					if (posA.y == posB.y && posA.x - 1 == posB.x) {
+						//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+						element->collectNmb(element2->GetElementNmb());
+						element2->collectNmb(element->GetElementNmb());
+					}
 				}
 			}
 		}
@@ -78,23 +110,44 @@ void ElementManager::ElementCollision()
 	for (std::unique_ptr<ElementH>& element : elements) {
 
 		//Œ³‘f1‚ÌÀ•W
-		posA = element->GetWorldPosition();
+		posA = element->GetPlace();
 
 		//Œ³‘f‚Q‚ÌÀ•W
-		posB = player_->GetWorldPosition();
+		posB = player_->GatPlace();
 
 		bool flagA = element->ConnectMaxElement();
 
-		if (Collision::CircleCollision(posB, posA, 0.5f, 0.5f)) {
-			if (flagA == false && playerConnectFlag == false) {
-
+		if (flagA == false && playerConnectFlag == false) {
+			if (posA.y + 1 == posB.y && posA.x == posB.x) {
 				//‚Â‚È‚ª‚Á‚½”»’è
 				element->ConnectElement();
 				//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
 				element->collectNmb(0);
 				playerConnectFlag = true;
-
 			}
+			if (posA.y - 1 == posB.y && posA.x == posB.x) {
+				//‚Â‚È‚ª‚Á‚½”»’è
+				element->ConnectElement();
+				//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+				element->collectNmb(0);
+				playerConnectFlag = true;
+			}
+
+			if (posA.y == posB.y && posA.x + 1 == posB.x) {
+				//‚Â‚È‚ª‚Á‚½”»’è
+				element->ConnectElement();
+				//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+				element->collectNmb(0);
+				playerConnectFlag = true;
+			}
+			if (posA.y == posB.y && posA.x - 1 == posB.x) {
+				//‚Â‚È‚ª‚Á‚½”»’è
+				element->ConnectElement();
+				//‚Â‚È‚ª‚Á‚½Œ³‘f‚ÌŒÂ‘Ì”Ô†•Û‘¶
+				element->collectNmb(0);
+				playerConnectFlag = true;
+			}
+
 		}
 	}
 }
@@ -203,19 +256,19 @@ void ElementManager::ExistenceEnemy(const Vector3& EnemyPos, int connectMax, int
 	//“GƒLƒƒƒ‰‚Ì¶¬
 	std::unique_ptr<ElementH> newElement = std::make_unique<ElementH>();
 	if (modelNmb == 0) {
-		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
 	else if (modelNmb == 1) {
-		newElement->Initialize(elementModelC_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelO_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
 	else if (modelNmb == 2) {
-		newElement->Initialize(elementModelN_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelN_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
 	else if (modelNmb == 3) {
-		newElement->Initialize(elementModelO_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelC_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
 	else {
-		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb);
+		newElement->Initialize(elementModelH_, EnemyPos, connectMax, elementNmb, input_, map_);
 	}
 
 
@@ -231,5 +284,95 @@ void ElementManager::Finalize()
 	elements.remove_if([](std::unique_ptr<ElementH>& element) {
 		return element->IsDeath();
 		});
+}
+
+void ElementManager::Reset(int map)
+{
+	map_ = map;
+	//ƒ}ƒbƒvXV
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (map == 0) {
+				baseMap[j][i] = tutorialMap[j][i];
+			}
+			else if (map == 1) {
+				baseMap[j][i] = map1[j][i];
+			}
+			else if (map == 2) {
+				baseMap[j][i] = map2[j][i];
+			}
+		}
+	}
+}
+
+bool ElementManager::ClearFlag()
+{
+	clearFlag = true;
+	for (std::unique_ptr<ElementH>& element : elements) {
+		if (element->ConnectMaxElement() == false) {
+			clearFlag = false;
+		}
+	}
+	return clearFlag;
+}
+
+void ElementManager::ElementWallColl()
+{
+	//”»’è‘ÎÛA‚ÆB‚ÌÀ•W
+	Vector2 posA, posB;
+
+	elementWall = false;
+	for (std::unique_ptr<ElementH>& element : elements) {
+		//Œ³‘f‚·‚×‚Ä‚Ì“–‚½‚è”»’è
+		for (const std::unique_ptr<ElementH>& element2 : elements) {
+			if (element != element2) {
+				//Œ³‘f1‚ÌÀ•W
+				posA = element->GetPlace();
+
+				//Œ³‘f‚Q‚ÌÀ•W
+				posB = element2->GetPlace();
+
+				bool flagA = element->ConnectMaxElement();
+				bool flagB = element2->ConnectMaxElement();
+
+				bool flagC = element->GetMoveOn();
+				bool flagD = element2->GetMoveOn();
+
+				if (flagA == true && flagB == false) {
+					if (input_->PushKey(DIK_A)) {
+						if (posA.y == posB.y && posA.x - 1 == posB.x) {
+							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+							elementWall = true;
+							frame = 0;
+						}
+
+					}
+					else if (input_->PushKey(DIK_D)) {
+						if (posA.y == posB.y && posA.x + 1 == posB.x) {
+							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+							elementWall = true;
+							frame = 0;
+						}
+
+					}
+
+					else if (input_->PushKey(DIK_W)) {
+						if (posA.y - 1 == posB.y && posA.x == posB.x) {
+							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+							elementWall = true;
+							frame = 0;
+						}
+					}
+					else if (input_->PushKey(DIK_S)) {
+						if (posA.y + 1 == posB.y && posA.x == posB.x) {
+							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+							elementWall = true;
+							frame = 0;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 

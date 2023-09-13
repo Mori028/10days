@@ -7,8 +7,8 @@ ElementH::ElementH()
 
 ElementH::~ElementH()
 {
-	delete elementH_;
-	delete elementModel_;
+	//delete elementH_;
+	//delete elementModel_;
 }
 
 void ElementH::Initialize(Model* elementModel, Vector3 elementPos, int connectMaxNmb, int elementNmb, Input* input, int map)

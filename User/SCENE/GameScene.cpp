@@ -246,7 +246,7 @@ void GameScene::Update() {
 				pSourceVoice[0]->SetVolume(0.3f);
 				soundCheckFlag = 1;
 			}
-			
+
 			//シーン切り替え
 			if (input->TriggerKey(DIK_SPACE)) {
 				sceneNo_ = SceneNo::STAGESELECT;
@@ -259,6 +259,7 @@ void GameScene::Update() {
 		}
 		break;
 	case SceneNo::STAGESELECT:
+
 		if (input->TriggerKey(DIK_L)) {
 
 			sceneNo_ = SceneNo::TITLE;
@@ -360,31 +361,6 @@ void GameScene::Update() {
 				}
 			}
 
-			//マップ切り替え
-			if (player_->GetFrame() >= 60) {
-				if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
-					stageCount++;
-					map++;
-					player_->Reset(map);
-					elementMna->Reset(map);
-				}
-				else if (input->TriggerKey(DIK_LEFT) && map > 0) {
-					stageCount--;
-					map--;
-					player_->Reset(map);
-					elementMna->Reset(map);
-				}
-				//位置リセット
-				if (input->TriggerKey(DIK_R)) {
-					player_->Reset(map);
-				}
-			}
-			if (stageCount >= 8) {
-				stageCount = 8;
-			}
-			else if (stageCount <= 0) {
-				stageCount = 1;
-			}
 			player_->Update();
 
 			skydome->Update();
@@ -392,8 +368,21 @@ void GameScene::Update() {
 			elementMna->SetPlayer(player_);
 			elementMna->Update(player_->GetWorldPosition());
 
+			bool clear = elementMna->ClearFlag();
+			if (clear == true) {
+				sceneNo_ = SceneNo::CLEAR;
+			}
+		}
+		break;
+	case SceneNo::CLEAR:
+		if (sceneNo_ == SceneNo::CLEAR) {
+			player_->Reset(map);
+			elementMna->Reset(map);
+			elementMna->Update(player_->GetWorldPosition());
+			if (input->TriggerKey(DIK_SPACE)) {
+
+
 			if (input->TriggerKey(DIK_L)) {
-				
 				sceneNo_ = SceneNo::STAGESELECT;
 			}
 		}

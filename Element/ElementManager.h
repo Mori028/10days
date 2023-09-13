@@ -88,6 +88,8 @@ private:
 	float frame = maxframe;
 	float oneframe = 4.0f;
 
+	float clearFrame = 0.0f;
+
 	//元素に当たっているか
 	bool elementWall = false;
 

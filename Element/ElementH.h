@@ -43,7 +43,7 @@ public:
 
 	Vector2 GetPlace() { return place; }
 
-	bool GetMoveOn() { return moveOn; }
+	bool GetMoveOn() { return ifConnect; }
 
 	void WallUpdate(bool elementHit);
 

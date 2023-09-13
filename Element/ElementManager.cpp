@@ -14,7 +14,7 @@ ElementManager::~ElementManager()
 	delete elementModelO_;
 }
 
-void ElementManager::Initialize(Input* input,int map)
+void ElementManager::Initialize(Input* input, int map)
 {
 	assert(input);
 
@@ -38,7 +38,7 @@ void ElementManager::Initialize(Input* input,int map)
 	//
 	////O
 	//Omodel_ = Model::LoadFromOBJ("Omodel");
-	
+
 
 	LoadEnemyPopData(map);
 
@@ -59,7 +59,7 @@ void ElementManager::Update(Vector3 playerPos)
 	for (std::unique_ptr<ElementH>& element : elements) {
 		element->Update(playerPos, hitWall);
 	}
-	
+
 	ElementCollision();
 	UpdateEnemyPopCommands();
 	aa = ClearFlag();
@@ -338,8 +338,9 @@ void ElementManager::Finalize()
 		});
 }
 
-void ElementManager::Reset(int map)
+void ElementManager::Reset(int map, int stageNmb)
 {
+	Finalize();
 	map_ = map;
 	//マップ更新
 	for (int i = 0; i < 6; i++) {
@@ -355,15 +356,17 @@ void ElementManager::Reset(int map)
 			}
 		}
 	}
-	EnemyPopComandReset(map);
+	EnemyPopComandReset(stageNmb);
 }
 
 bool ElementManager::ClearFlag()
 {
-	clearFlag = true;
-	for (std::unique_ptr<ElementH>& element : elements) {
-		if (element->ConnectMaxElement() == false) {
-			clearFlag = false;
+	if (clearFrame >= maxframe) {
+		clearFlag = true;
+		for (std::unique_ptr<ElementH>& element : elements) {
+			if (element->ConnectMaxElement() == false) {
+				clearFlag = false;
+			}
 		}
 	}
 	return clearFlag;
@@ -375,6 +378,9 @@ void ElementManager::ElementWallColl()
 	Vector2 posA, posB;
 	if (frame < maxframe) {
 		frame += oneframe;
+	}
+	if (clearFrame < maxframe) {
+		clearFrame += oneframe;
 	}
 	else {
 		frame = maxframe;
@@ -398,7 +404,7 @@ void ElementManager::ElementWallColl()
 					bool flagC = element->GetMoveOn();
 					bool flagD = element2->GetMoveOn();
 
-					if (flagA == true && flagB == false) {
+					if (flagA == true && flagB == false && flagD == false) {
 						if (input_->PushKey(DIK_A)) {
 							if (posA.y == posB.y && posA.x - 1 == posB.x) {
 								//元素に当たったかどうか

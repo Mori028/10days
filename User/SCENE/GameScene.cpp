@@ -198,7 +198,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	elementMna = new ElementManager();
 	elementMna->Initialize(input, map);
 	elementMna->SetPlayer(player_);
-	elementMna->Reset(map);
+	elementMna->Reset(map, stageNmb);
 
 	//タイトル
 	title_ = new Title();
@@ -233,7 +233,7 @@ void GameScene::Update() {
 				pSourceVoice[0]->SetVolume(0.3f);
 				soundCheckFlag = 1;
 			}
-			
+
 			//シーン切り替え
 			if (input->TriggerKey(DIK_SPACE) || input->ButtonInput(RT)) {
 				sceneNo_ = SceneNo::STAGESELECT;
@@ -250,28 +250,30 @@ void GameScene::Update() {
 		}
 		break;
 	case SceneNo::STAGESELECT:
-		if (input->TriggerKey(DIK_A)) {
-			if (stageNmb > 0) {
-				stageNmb--;
+		if (sceneNo_ == SceneNo::STAGESELECT) {
+			if (input->TriggerKey(DIK_A)) {
+				if (stageNmb > 0) {
+					stageNmb--;
+				}
 			}
-		}
-		if (input->TriggerKey(DIK_D)) {
-			if (stageNmb < 8) {
-				stageNmb++;
+			if (input->TriggerKey(DIK_D)) {
+				if (stageNmb < 8) {
+					stageNmb++;
+				}
 			}
-		}
-		if (input->TriggerKey(DIK_W)) {
-			if (stageNmb > 3) {
-				stageNmb -= 4;
+			if (input->TriggerKey(DIK_W)) {
+				if (stageNmb > 3) {
+					stageNmb -= 4;
+				}
 			}
-		}
-		if (input->TriggerKey(DIK_S)) {
-			if (stageNmb < 4) {
-				stageNmb += 4;
+			if (input->TriggerKey(DIK_S)) {
+				if (stageNmb < 4) {
+					stageNmb += 4;
+				}
 			}
-		}
-		if (input->TriggerKey(DIK_SPACE)) {
-			sceneNo_ = SceneNo::GAME;
+			if (input->TriggerKey(DIK_SPACE)) {
+				sceneNo_ = SceneNo::GAME;
+			}
 		}
 		break;
 	case SceneNo::GAME:
@@ -331,13 +333,13 @@ void GameScene::Update() {
 					stageCount++;
 					map++;
 					player_->Reset(map);
-					elementMna->Reset(map);
+					elementMna->Reset(map, stageNmb);
 				}
 				else if (input->TriggerKey(DIK_LEFT) && map > 0) {
 					stageCount--;
 					map--;
 					player_->Reset(map);
-					elementMna->Reset(map);
+					elementMna->Reset(map, stageNmb);
 				}
 				//位置リセット
 				if (input->TriggerKey(DIK_R)) {
@@ -356,6 +358,20 @@ void GameScene::Update() {
 
 			elementMna->SetPlayer(player_);
 			elementMna->Update(player_->GetWorldPosition());
+			bool clear = elementMna->ClearFlag();
+			if (clear == true) {
+				sceneNo_ = SceneNo::CLEAR;
+			}
+		}
+		break;
+	case SceneNo::CLEAR:
+		if (sceneNo_ == SceneNo::CLEAR) {
+			player_->Reset(map);
+			elementMna->Reset(map, stageNmb);
+			elementMna->Update(player_->GetWorldPosition());
+			if (input->TriggerKey(DIK_SPACE)) {
+				sceneNo_ = SceneNo::STAGESELECT;
+			}
 		}
 	}
 }

@@ -151,5 +151,5 @@ private:	//メンバ変数
 	int map = 0;
 	ElementManager* elementMna = nullptr;
 
-	int stageNmb = 0;
+	int stageNmb = 4;
 };

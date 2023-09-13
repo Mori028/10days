@@ -45,7 +45,7 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	void Finalize();
 
-	void Reset(int map);
+	void Reset(int map, int stageNmb);
 
 	bool ClearFlag();
 
@@ -87,6 +87,8 @@ private:
 	float maxframe = 60.0f;
 	float frame = maxframe;
 	float oneframe = 4.0f;
+
+	float clearFrame = 0.0f;
 
 	//元素に当たっているか
 	bool elementWall = false;

@@ -87,10 +87,25 @@ private:	//メンバ変数
 
 	Sprite* titleSprite = new Sprite();
 
+	//元素
 	Sprite* HHSprite = new Sprite();
+	Sprite* H2OSprite = new Sprite();
+	Sprite* H2O2Sprite = new Sprite();
+	Sprite* N2H4Sprite = new Sprite();
+	Sprite* CH4Sprite = new Sprite();
+	Sprite* CH4OSprite = new Sprite();
 
+	//8ステージ{
 	Sprite* stage1Sprite = new Sprite();
-
+	Sprite* stage2Sprite = new Sprite();
+	Sprite* stage3Sprite = new Sprite();
+	Sprite* stage4Sprite = new Sprite();
+	Sprite* stage5Sprite = new Sprite();
+	Sprite* stage6Sprite = new Sprite();
+	Sprite* stage7Sprite = new Sprite();
+	Sprite* stage8Sprite = new Sprite();
+	//}
+	
 	//カメラ
 	Camera* mainCamera = nullptr;
 	Camera* camera1 = nullptr;
@@ -103,6 +118,13 @@ private:	//メンバ変数
 	//タイトル
 	Title* title_ = nullptr;
 
+	//クリア
+	Sprite* clearSprite = new Sprite();
+
+	//ステージカウント
+	int stageCount = 1;
+
+	int Clearflag = 0;
 	//背景や床
 	Object3d* skydome = nullptr;
 	Model* skydomeMD = nullptr;

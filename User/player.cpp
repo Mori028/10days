@@ -28,14 +28,6 @@ void Player::Initialize(DirectXCommon* dxCommon, Model* model, Input* input) {
 	// グラフィックスパイプライン生成
 	FBXObject3d::CreateGraphicsPipeline();
 
-	//待機
-	fbxObject3d_ = new FBXObject3d;
-	fbxObject3d_->Initialize();
-	fbxObject3d_->SetModel(fbxModel_);
-	fbxObject3d_->wtf.position = { 0.0f,-0.3f,0.0f };
-	fbxObject3d_->wtf.scale = { 0.1f,0.1f,0.1f };
-	fbxObject3d_->PlayAnimation(1.0f,true);
-
 	object = new Object3d();
 	object->Initialize();
 	object->SetModel(model_);

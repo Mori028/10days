@@ -198,7 +198,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	elementMna = new ElementManager();
 	elementMna->Initialize(input, map);
 	elementMna->SetPlayer(player_);
-	elementMna->Reset(map, stageNmb);
+	elementMna->Reset(map);
 
 	//タイトル
 	title_ = new Title();
@@ -327,31 +327,6 @@ void GameScene::Update() {
 				}
 			}
 
-			//マップ切り替え
-			if (player_->GetFrame() >= 60) {
-				if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
-					stageCount++;
-					map++;
-					player_->Reset(map);
-					elementMna->Reset(map, stageNmb);
-				}
-				else if (input->TriggerKey(DIK_LEFT) && map > 0) {
-					stageCount--;
-					map--;
-					player_->Reset(map);
-					elementMna->Reset(map, stageNmb);
-				}
-				//位置リセット
-				if (input->TriggerKey(DIK_R)) {
-					player_->Reset(map);
-				}
-			}
-			if (stageCount >= 8) {
-				stageCount = 8;
-			}
-			else if (stageCount <= 0) {
-				stageCount = 1;
-			}
 			player_->Update();
 
 			skydome->Update();
@@ -367,7 +342,7 @@ void GameScene::Update() {
 	case SceneNo::CLEAR:
 		if (sceneNo_ == SceneNo::CLEAR) {
 			player_->Reset(map);
-			elementMna->Reset(map, stageNmb);
+			elementMna->Reset(map);
 			elementMna->Update(player_->GetWorldPosition());
 			if (input->TriggerKey(DIK_SPACE)) {
 				sceneNo_ = SceneNo::STAGESELECT;

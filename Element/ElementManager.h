@@ -45,7 +45,7 @@ public:
 	void SetPlayer(Player* player) { player_ = player; }
 	void Finalize();
 
-	void Reset(int map, int stageNmb);
+	void Reset(int map);
 
 	bool ClearFlag();
 

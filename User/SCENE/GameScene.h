@@ -97,6 +97,10 @@ private:	//メンバ変数
 
 	Sprite* titleSprite = new Sprite();
 
+	Sprite* selectSprite = new Sprite();
+
+	Sprite* takuSprite = new Sprite();
+
 	//元素
 	Sprite* HHSprite = new Sprite();
 	Sprite* H2OSprite = new Sprite();
@@ -130,6 +134,8 @@ private:	//メンバ変数
 
 	//クリア
 	Sprite* clearSprite = new Sprite();
+	//セレクトカウント
+	int selectCount = 1;
 
 	//ステージカウント
 	int stageCount = 1;

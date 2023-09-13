@@ -60,6 +60,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	titleSprite->SetSize({ 1280.0f, 720.0f });
 	spriteCommon->LoadTexture(5, "Title.png");
 	titleSprite->SetTextureIndex(5);
+	//ステージセレクト
+	selectSprite->Initialize(spriteCommon);
+	selectSprite->SetPozition({ 0,0 });
+	selectSprite->SetSize({ 1280.0f, 720.0f });
+	spriteCommon->LoadTexture(22, "select.png");
+	selectSprite->SetTextureIndex(22);
+	//操作説明の選択枠
+	takuSprite->Initialize(spriteCommon);
+	takuSprite->SetPozition({ 137,106 });
+	takuSprite->SetSize({ 145.0f, 186.0f });
+	spriteCommon->LoadTexture(23, "taku.png");
+	takuSprite->SetTextureIndex(23);
 	//クリア
 	clearSprite->Initialize(spriteCommon);
 	clearSprite->SetPozition({ 0,0 });
@@ -226,6 +238,7 @@ void GameScene::Update() {
 	{
 	case SceneNo::TITLE:
 		if (sceneNo_ == SceneNo::TITLE) {
+
 			if (soundCheckFlag == 0) {
 				//タイトルBGM再生
 
@@ -235,42 +248,64 @@ void GameScene::Update() {
 			}
 			
 			//シーン切り替え
-			if (input->TriggerKey(DIK_SPACE) || input->ButtonInput(RT)) {
+			if (input->TriggerKey(DIK_SPACE)) {
 				sceneNo_ = SceneNo::STAGESELECT;
-
-				if (soundCheckFlag2 == 0) {
-					//タイトルBGM再生
-
-					pSourceVoice[1] = audio->PlayWave("open.wav");
-					pSourceVoice[1]->SetVolume(0.4f);
-					soundCheckFlag2 = 1;
-				}
+				//ステージ選択時の効果音
+				pSourceVoice[1] = audio->PlayWave("open.wav");
+				pSourceVoice[1]->SetVolume(0.4f);
+				soundCheckFlag2 = 1;
 
 			}
 		}
 		break;
 	case SceneNo::STAGESELECT:
+		if (input->TriggerKey(DIK_L)) {
+
+			sceneNo_ = SceneNo::TITLE;
+		}
+		if (soundCheckFlag3 == 1) {
+			//ゲームシーンの音楽を止める
+			pSourceVoice[2]->Stop();
+			soundCheckFlag3 = 0;
+		}
+		if (soundCheckFlag == 0) {
+			//タイトルBGM再生
+
+			pSourceVoice[0] = audio->PlayWave("Title.wav");
+			pSourceVoice[0]->SetVolume(0.3f);
+			soundCheckFlag = 1;
+		}
+		
 		if (input->TriggerKey(DIK_A)) {
 			if (stageNmb > 0) {
+				selectCount--;
 				stageNmb--;
 			}
 		}
 		if (input->TriggerKey(DIK_D)) {
 			if (stageNmb < 8) {
+				selectCount++;
 				stageNmb++;
 			}
 		}
 		if (input->TriggerKey(DIK_W)) {
 			if (stageNmb > 3) {
+				selectCount -= 4;
 				stageNmb -= 4;
 			}
 		}
 		if (input->TriggerKey(DIK_S)) {
 			if (stageNmb < 4) {
+				selectCount += 4;
 				stageNmb += 4;
 			}
 		}
 		if (input->TriggerKey(DIK_SPACE)) {
+			//ステージ選択時の効果音
+			pSourceVoice[1] = audio->PlayWave("open.wav");
+			pSourceVoice[1]->SetVolume(0.4f);
+			soundCheckFlag2 = 1;
+			
 			sceneNo_ = SceneNo::GAME;
 		}
 		break;
@@ -356,6 +391,11 @@ void GameScene::Update() {
 
 			elementMna->SetPlayer(player_);
 			elementMna->Update(player_->GetWorldPosition());
+
+			if (input->TriggerKey(DIK_L)) {
+				
+				sceneNo_ = SceneNo::STAGESELECT;
+			}
 		}
 	}
 }
@@ -368,41 +408,67 @@ void GameScene::Draw() {
 		titleSprite->Draw();
 
 	}
-
+	if (sceneNo_ == SceneNo::STAGESELECT) {
+		selectSprite->Draw();
+		takuSprite->Draw();
+		if (selectCount == 1) {
+			takuSprite->SetPozition({ 137,106 });
+		}else if (selectCount == 2) {
+			takuSprite->SetPozition({ 431,106 });
+		}
+		else if (selectCount == 3) {
+			takuSprite->SetPozition({ 737,106 });
+		}
+		else if (selectCount == 4) {
+			takuSprite->SetPozition({ 1042,106 });
+		}
+		else if (selectCount == 5) {
+			takuSprite->SetPozition({ 137,456 });
+		}
+		else if (selectCount == 6) {
+			takuSprite->SetPozition({ 431,456 });
+		}
+		else if (selectCount == 7) {
+			takuSprite->SetPozition({ 737,456 });
+		}
+		else if (selectCount == 8) {
+			takuSprite->SetPozition({ 1042,456 });
+		}
+	}
 
 	if (sceneNo_ == SceneNo::GAME) {
 		wakuSprite->Draw();
 		setumeiSprite->Draw();
 		sousaSprite->Draw();
-		if (stageCount == 1) {
+		if (stageNmb == 0) {
 			HHSprite->Draw();
 			stage1Sprite->Draw();
 		}
-		else if (stageCount == 2) {
+		else if (stageNmb == 1) {
 			H2OSprite->Draw();
 			stage2Sprite->Draw();
 		}
-		else if (stageCount == 3) {
+		else if (stageNmb == 2) {
 			H2O2Sprite->Draw();
 			stage3Sprite->Draw();
 		}
-		else if (stageCount == 4) {
+		else if (stageNmb == 3) {
 			H2OSprite->Draw();
 			stage4Sprite->Draw();
 		}
-		else if (stageCount == 5) {
+		else if (stageNmb == 4) {
 			H2O2Sprite->Draw();
 			stage5Sprite->Draw();
 		}
-		else if (stageCount == 6) {
+		else if (stageNmb == 5) {
 			N2H4Sprite->Draw();
 			stage6Sprite->Draw();
 		}
-		else if (stageCount == 7) {
+		else if (stageNmb == 6) {
 			CH4Sprite->Draw();
 			stage7Sprite->Draw();
 		}
-		else if (stageCount == 8) {
+		else if (stageNmb == 7) {
 			CH4OSprite->Draw();
 			stage8Sprite->Draw();
 		}

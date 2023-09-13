@@ -1,6 +1,6 @@
 //コマンド,x,y,z,elementConnectMax,elementnmb,modelNmb(0=H,1=O,2=N,3=C),
 WAIT,0,,
-POP,1,-2,15,1,1,0
+POP,5,-2,15,1,1,0
 WAIT,0,,
 POP,2,-3,15,2,2,1
 WAIT,0,,

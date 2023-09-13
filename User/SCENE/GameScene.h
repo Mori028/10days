@@ -133,6 +133,7 @@ private:	//メンバ変数
 	Model* playerMD = nullptr;
 	Model* block = nullptr;
 	Model* p = nullptr;
+
 	//UI
 
 	//ゲームフロー

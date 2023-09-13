@@ -67,6 +67,19 @@ private:
 	//Œ³‘fƒ‚ƒfƒ‹
 	Model* elementModelO_ = nullptr;
 
+	//H
+	Object3d* HObj_ = nullptr;
+	Model* Hmodel_ = nullptr;
+	//C
+	Object3d* CObj_ = nullptr;
+	Model* Cmodel_ = nullptr;
+	//N
+	Object3d* NObj_ = nullptr;
+	Model* Nmodel_ = nullptr;
+	//O
+	Object3d* OObj_ = nullptr;
+	Model* Omodel_ = nullptr;
+
 
 
 };

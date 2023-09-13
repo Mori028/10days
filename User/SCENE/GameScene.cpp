@@ -167,7 +167,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	skydome->wtf.scale = (Vector3{ 1000, 1000, 1000 });
 
 	p = Model::LoadFromOBJ("Particle");
-	playerMD = Model::LoadFromOBJ("ster");
+	playerMD = Model::LoadFromOBJ("H");
 	block = Model::LoadFromOBJ("WoodenBox");
 
 	elementMna = new ElementManager();
@@ -283,7 +283,7 @@ void GameScene::Update() {
 			skydome->Update();
 		}
 	}
-
+	
 	elementMna->SetPlayer(player_);
 	elementMna->Update(player_->GetWorldPosition());
 }

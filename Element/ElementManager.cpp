@@ -338,7 +338,7 @@ void ElementManager::Finalize()
 		});
 }
 
-void ElementManager::Reset(int map)
+void ElementManager::Reset(int map,int stageNmb)
 {
 	Finalize();
 	map_ = map;
@@ -356,7 +356,8 @@ void ElementManager::Reset(int map)
 			}
 		}
 	}
-	EnemyPopComandReset(map);
+	clearFrame = 0.0f;
+	EnemyPopComandReset(stageNmb);
 }
 
 bool ElementManager::ClearFlag()

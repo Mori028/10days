@@ -88,5 +88,8 @@ private:
 	float frame = maxframe;
 	float oneframe = 4.0f;
 
+	//Œ³‘f‚É“–‚½‚Á‚Ä‚¢‚é‚©
 	bool elementWall = false;
+
+
 };

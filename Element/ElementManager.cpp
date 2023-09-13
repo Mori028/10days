@@ -39,13 +39,13 @@ void ElementManager::Update(Vector3 playerPos)
 	hitWall = false;
 	ElementWallColl();
 	for (std::unique_ptr<ElementH>& element : elements) {
-		element->WallUpdate();
+		element->WallUpdate(elementWall);
 		if (element->BlockMove()) {
 			hitWall = true;
 		}
 	}
 	for (std::unique_ptr<ElementH>& element : elements) {
-		element->Update(playerPos, hitWall, elementWall);
+		element->Update(playerPos, hitWall);
 	}
 	ElementCollision();
 	UpdateEnemyPopCommands();
@@ -320,54 +320,62 @@ void ElementManager::ElementWallColl()
 {
 	//”»’è‘ÎÛA‚ÆB‚ÌÀ•W
 	Vector2 posA, posB;
+	if (frame < maxframe) {
+		frame += oneframe;
+	}
+	else {
+		frame = maxframe;
+	}
 
-	elementWall = false;
-	for (std::unique_ptr<ElementH>& element : elements) {
-		//Œ³‘f‚·‚×‚Ä‚Ì“–‚½‚è”»’è
-		for (const std::unique_ptr<ElementH>& element2 : elements) {
-			if (element != element2) {
-				//Œ³‘f1‚ÌÀ•W
-				posA = element->GetPlace();
+	if (frame >= maxframe) {
+		elementWall = false;
+		for (std::unique_ptr<ElementH>& element : elements) {
+			//Œ³‘f‚·‚×‚Ä‚Ì“–‚½‚è”»’è
+			for (const std::unique_ptr<ElementH>& element2 : elements) {
+				if (element != element2) {
+					//Œ³‘f1‚ÌÀ•W
+					posA = element->GetPlace();
 
-				//Œ³‘f‚Q‚ÌÀ•W
-				posB = element2->GetPlace();
+					//Œ³‘f‚Q‚ÌÀ•W
+					posB = element2->GetPlace();
 
-				bool flagA = element->ConnectMaxElement();
-				bool flagB = element2->ConnectMaxElement();
+					bool flagA = element->ConnectMaxElement();
+					bool flagB = element2->ConnectMaxElement();
 
-				bool flagC = element->GetMoveOn();
-				bool flagD = element2->GetMoveOn();
+					bool flagC = element->GetMoveOn();
+					bool flagD = element2->GetMoveOn();
 
-				if (flagA == true && flagB == false) {
-					if (input_->PushKey(DIK_A)) {
-						if (posA.y == posB.y && posA.x - 1 == posB.x) {
-							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
-							elementWall = true;
-							frame = 0;
+					if (flagA == true && flagB == false) {
+						if (input_->PushKey(DIK_A)) {
+							if (posA.y == posB.y && posA.x - 1 == posB.x) {
+								//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+								element->HitElementTrue();
+								element2->HitElementTrue();
+							}
+
+						}
+						else if (input_->PushKey(DIK_D)) {
+							if (posA.y == posB.y && posA.x + 1 == posB.x) {
+								//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+								element->HitElementTrue();
+								element2->HitElementTrue();
+							}
+
 						}
 
-					}
-					else if (input_->PushKey(DIK_D)) {
-						if (posA.y == posB.y && posA.x + 1 == posB.x) {
-							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
-							elementWall = true;
-							frame = 0;
+						else if (input_->PushKey(DIK_W)) {
+							if (posA.y - 1 == posB.y && posA.x == posB.x) {
+								//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+								element->HitElementTrue();
+								element2->HitElementTrue();
+							}
 						}
-
-					}
-
-					else if (input_->PushKey(DIK_W)) {
-						if (posA.y - 1 == posB.y && posA.x == posB.x) {
-							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
-							elementWall = true;
-							frame = 0;
-						}
-					}
-					else if (input_->PushKey(DIK_S)) {
-						if (posA.y + 1 == posB.y && posA.x == posB.x) {
-							//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
-							elementWall = true;
-							frame = 0;
+						else if (input_->PushKey(DIK_S)) {
+							if (posA.y + 1 == posB.y && posA.x == posB.x) {
+								//Œ³‘f‚É“–‚½‚Á‚½‚©‚Ç‚¤‚©
+								element->HitElementTrue();
+								element2->HitElementTrue();
+							}
 						}
 					}
 				}

@@ -46,19 +46,20 @@ void ElementH::Initialize(Model* elementModel, Vector3 elementPos, int connectMa
 	worldPosition.y = -(float)place.y;
 	position.x = worldPosition.x + moveVal - easeOutCubic(frame / maxframe) * moveVal;
 	position.y = worldPosition.y + moveVal - easeOutCubic(frame / maxframe) * moveVal;
- 	intFlame = 0;
+	intFlame = 0;
 }
 
-void ElementH::Update(Vector3 playerPos, bool hitBlocks,bool elementHit)
+void ElementH::Update(Vector3 playerPos, bool hitBlocks)
 {
 	Vector3 playyerPos = playerPos;
 	move = { 0,0,0 };
 
 	if (ifConnect) {
-		if (elementHit == false) {
-			if (intFlame >= maxframe) {
-				if (hitBlocks == false) {
-					if (frame >= maxframe) {
+
+		if (intFlame >= maxframe) {
+			if (hitBlocks == false) {
+				if (frame >= maxframe) {
+					if (hitElement == false) {
 						moveOn = false;
 						if (input_->PushKey(DIK_A) && place.x > 0) {
 							if (baseMap[(int)place.y][(int)place.x - 1] == 0) {
@@ -99,6 +100,7 @@ void ElementH::Update(Vector3 playerPos, bool hitBlocks,bool elementHit)
 							}
 						}
 					}
+
 				}
 
 				//移動にイージングを掛ける
@@ -120,6 +122,7 @@ void ElementH::Update(Vector3 playerPos, bool hitBlocks,bool elementHit)
 	if (connectNmb_ >= connectMaxNum_) {
 		connectMax_ = true;
 	}
+	hitElement = false;
 	elementH_->wtf.position = position;
 	elementH_->Update();
 	//oldPlayerPos_ = playyerPos;
@@ -151,72 +154,72 @@ void ElementH::collectNmb(int Nmb)
 
 }
 
-void ElementH::WallUpdate()
+void ElementH::WallUpdate(bool elementHit)
 {
 	if (ifConnect) {
-		if (intFlame <= maxframe) {
-			intFlame += oneframe;
-		}
-		if (intFlame >= maxframe) {
-			//イージング用フレーム
-			if (frame < maxframe) {
-				frame += oneframe;
+			if (intFlame <= maxframe) {
+				intFlame += oneframe;
 			}
-			else {
-				frame = maxframe;
-			}
+			if (intFlame >= maxframe) {
+				//イージング用フレーム
+				if (frame < maxframe) {
+					frame += oneframe;
+				}
+				else {
+					frame = maxframe;
+				}
 
-			if (frame >= maxframe) {
-				hitBlock = false;
-				if (input_->PushKey(DIK_A) && place.x > 0) {
-					if (baseMap[(int)place.y][(int)place.x - 1] == 0) {
-						hitBlock = false;
+				if (frame >= maxframe) {
+					hitBlock = false;
+					if (input_->PushKey(DIK_A) && place.x > 0) {
+						if (baseMap[(int)place.y][(int)place.x - 1] == 0) {
+							hitBlock = false;
+						}
+						else if (baseMap[(int)place.y][(int)place.x - 1] == 1) {
+							hitBlock = true;
+						}
 					}
-					else if (baseMap[(int)place.y][(int)place.x - 1] == 1) {
+					else if (input_->PushKey(DIK_D) && place.x < 5) {
+						if (baseMap[(int)place.y][(int)place.x + 1] == 0) {
+							hitBlock = false;
+						}
+						else if (baseMap[(int)place.y][(int)place.x + 1] == 1) {
+							hitBlock = true;
+						}
+					}
+
+					else if (input_->PushKey(DIK_W) && place.y > 0) {
+						if (baseMap[(int)place.y - 1][(int)place.x] == 0) {
+							hitBlock = false;
+						}
+						else if (baseMap[(int)place.y - 1][(int)place.x] == 1) {
+							hitBlock = true;
+						}
+					}
+					else if (input_->PushKey(DIK_S) && place.y < 5) {
+						if (baseMap[(int)place.y + 1][(int)place.x] == 0) {
+							hitBlock = false;
+
+						}
+						else if (baseMap[(int)place.y + 1][(int)place.x] == 1) {
+							hitBlock = true;
+						}
+					}
+					//範囲外判定
+					if (input_->PushKey(DIK_A) && place.x <= 0) {
+						hitBlock = true;
+					}
+					else if (input_->PushKey(DIK_D) && place.x >= 5) {
+						hitBlock = true;
+					}
+
+					else if (input_->PushKey(DIK_W) && place.y <= 0) {
+						hitBlock = true;
+					}
+					else if (input_->PushKey(DIK_S) && place.y >= 5) {
 						hitBlock = true;
 					}
 				}
-				else if (input_->PushKey(DIK_D) && place.x < 5) {
-					if (baseMap[(int)place.y][(int)place.x + 1] == 0) {
-						hitBlock = false;
-					}
-					else if (baseMap[(int)place.y][(int)place.x + 1] == 1) {
-						hitBlock = true;
-					}
-				}
-
-				else if (input_->PushKey(DIK_W) && place.y > 0) {
-					if (baseMap[(int)place.y - 1][(int)place.x] == 0) {
-						hitBlock = false;
-					}
-					else if (baseMap[(int)place.y - 1][(int)place.x] == 1) {
-						hitBlock = true;
-					}
-				}
-				else if (input_->PushKey(DIK_S) && place.y < 5) {
-					if (baseMap[(int)place.y + 1][(int)place.x] == 0) {
-						hitBlock = false;
-
-					}
-					else if (baseMap[(int)place.y + 1][(int)place.x] == 1) {
-						hitBlock = true;
-					}
-				}
-				//範囲外判定
-				if (input_->PushKey(DIK_A) && place.x <= 0) {
-					hitBlock = true;
-				}
-				else if (input_->PushKey(DIK_D) && place.x >= 5) {
-					hitBlock = true;
-				}
-
-				else if (input_->PushKey(DIK_W) && place.y <= 0) {
-					hitBlock = true;
-				}
-				else if (input_->PushKey(DIK_S) && place.y >= 5) {
-					hitBlock = true;
-				}
-			}
 		}
 	}
 }

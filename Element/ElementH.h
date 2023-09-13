@@ -18,7 +18,7 @@ public:
 
 	void Initialize(Model* elementModel, Vector3 elementPos, int connectMaxNmb,int elementNmb,Input* input,int map);
 
-	void Update(Vector3 playerPos, bool hitBlocks, bool elementHit);
+	void Update(Vector3 playerPos, bool hitBlocks);
 
 	void Draw();
 
@@ -45,12 +45,13 @@ public:
 
 	bool GetMoveOn() { return moveOn; }
 
-	void WallUpdate();
+	void WallUpdate(bool elementHit);
 
 	//イージング
 	float easeOutCubic(float x) {
 		return 1 - (float)pow(1 - x, 3);
 	}
+	void HitElementTrue() { hitElement = true; }
 
 private:
 
@@ -97,4 +98,6 @@ private:
 	float moveVal = 1.0f;
 	//向き
 	Direction direction = Direction::Up;
+
+	bool hitElement = false;
 };

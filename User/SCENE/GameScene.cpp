@@ -159,8 +159,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
-	mainCamera->SetEye({ 2.5f,-7.0f,5 });
-	mainCamera->SetTarget({ 2.5f,-5.0f,10 });
+	mainCamera->SetEye({ -5.0f,-2.0f,5 });
+	mainCamera->SetTarget({ -5.0f,-0.0f,10 });
 	mainCamera->Update();
 	
 	ParticleManager::SetCamera(mainCamera);
@@ -176,9 +176,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	playerMD = Model::LoadFromOBJ("H");
 	block = Model::LoadFromOBJ("WoodenBox");
 
-	elementMna = new ElementManager();
-	elementMna->Initialize();
-	elementMna->SetPlayer(player_);
+
 	
 
 	for (int i = 0; i < 6; i++) {
@@ -196,6 +194,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	player_->Reset(map);
 	player_->SetCamera(mainCamera);
 
+	elementMna = new ElementManager();
+	elementMna->Initialize(input);
+	elementMna->SetPlayer(player_);
+	elementMna->Reset(map);
 
 	//タイトル
 	title_ = new Title();
@@ -248,6 +250,7 @@ void GameScene::Update() {
 		break;
 	case SceneNo::GAME:
 		if (sceneNo_ == SceneNo::GAME) {
+
 			//タイトルの音楽を止める
 			pSourceVoice[0]->Stop();
 			soundCheckFlag = 0;
@@ -260,6 +263,7 @@ void GameScene::Update() {
 				pSourceVoice[2]->SetVolume(0.5f);
 				soundCheckFlag3 = 1;
 			}
+
 			for (int i = 0; i < 6; i++) {
 				for (int j = 0; j < 6; j++) {
 					obj[i][j]->wtf.position = { ((float)i - 6.0f) * 1.0f, (5.0f - (float)j) * 1.0f,15.0f };
@@ -301,11 +305,13 @@ void GameScene::Update() {
 			stageCount++;
 			map++;
 			player_->Reset(map);
+			elementMna->Reset(map);
 		}
 		else if (input->TriggerKey(DIK_LEFT) && map > 0) {
 			stageCount--;
 			map--;
 			player_->Reset(map);
+			elementMna->Reset(map);
 		}
 		//位置リセット
 		if (input->TriggerKey(DIK_R)) {
@@ -321,11 +327,11 @@ void GameScene::Update() {
 			player_->Update();
 
 			skydome->Update();
+
+			elementMna->SetPlayer(player_);
+			elementMna->Update(player_->GetWorldPosition());
 		}
 	}
-	
-	elementMna->SetPlayer(player_);
-	elementMna->Update(player_->GetWorldPosition());
 }
 
 /// <summary>

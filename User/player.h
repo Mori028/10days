@@ -63,6 +63,10 @@ private:
 	//待機
 	FBXModel* fbxModel_ = nullptr;
 	FBXObject3d* fbxObject3d_ = nullptr;
+
+	//H
+	Object3d* HObj_ = nullptr;
+	Model* Hmodel_ = nullptr;
 	
 	const float moveSpeed_ = 0.1f;
 	const float rotaSpeed_ = 0.1f;

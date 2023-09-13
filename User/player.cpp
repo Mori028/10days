@@ -28,6 +28,13 @@ void Player::Initialize(DirectXCommon* dxCommon, Model* model, Input* input) {
 	// グラフィックスパイプライン生成
 	FBXObject3d::CreateGraphicsPipeline();
 
+	//H
+	Hmodel_ = Model::LoadFromOBJ("Hmodel");
+	HObj_ = Object3d::Create();
+	HObj_->SetModel(Hmodel_);
+	HObj_->wtf.position = { 0,0,0 };
+	HObj_->wtf.scale = { 1.0f,1.0f,1.0f };
+
 	object = new Object3d();
 	object->Initialize();
 	object->SetModel(model_);
@@ -127,11 +134,14 @@ void Player::Update() {
 
 	//fbxObject3d_->Update();
 	object->wtf.position = position;
+	HObj_->wtf.position = { object->wtf.position.x,object->wtf.position.y, object->wtf.position.z };
 	object->Update();
+	HObj_->Update();
 }
 
 void Player::Draw() {
 	//sprite->Draw();
+	HObj_->Draw();
 	object->Draw();
 	
 }

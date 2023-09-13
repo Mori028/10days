@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include "Input.h"
 
 class Player;
 class ElementManager
@@ -17,7 +18,7 @@ public:
 	ElementManager();
 	~ElementManager();
 
-	void Initialize();
+	void Initialize(Input* input);
 
 	void Update(Vector3 playerPos);
 
@@ -26,28 +27,34 @@ public:
 	void ElementCollision();
 
 	/// <summary>
-	/// Œ³‘f‚ÌCSV‚Ì“Ç‚İ‚İ
+	/// å…ƒç´ ã®CSVã®èª­ã¿è¾¼ã¿
 	/// </summary>
 	void LoadEnemyPopData();
 
-	//CSVƒŠƒZƒbƒg
+	//CSVãƒªã‚»ãƒƒãƒˆ
 	void EnemyPopComandReset();
 
 	/// <summary>
-	/// Œ³‘f‚ÌCSV‚Ì‰ğÍ
+	/// å…ƒç´ ã®CSVã®è§£æ
 	/// </summary>
 	void UpdateEnemyPopCommands();
 
-	//Œ³‘f‚Ì“o˜^
+	//å…ƒç´ ã®ç™»éŒ²
 	void ExistenceEnemy(const Vector3& EnemyPos, int connectMax, int elementNmb, int modelNmb);
 
 	void SetPlayer(Player* player) { player_ = player; }
 	void Finalize();
 
+	void Reset(int map);
+
+	bool ClearFlag();
+
+	void ElementWallColl();
+
 private:
 
 	std::list<std::unique_ptr<ElementH>> elements;
-	//“G”­¶ƒRƒ}ƒ“ƒh
+	//æ•µç™ºç”Ÿã‚³ãƒãƒ³ãƒ‰
 	std::stringstream elementPop;
 
 	bool waitflag = false;
@@ -58,14 +65,31 @@ private:
 	Player* player_ = nullptr;
 	bool playerConnectFlag = false;
 
-	//Œ³‘fƒ‚ƒfƒ‹
+	//å…ƒç´ ãƒ¢ãƒ‡ãƒ«
 	Model* elementModelH_ = nullptr;
-	//Œ³‘fƒ‚ƒfƒ‹
+	//å…ƒç´ ãƒ¢ãƒ‡ãƒ«
 	Model* elementModelC_ = nullptr;
-	//Œ³‘fƒ‚ƒfƒ‹
+	//å…ƒç´ ãƒ¢ãƒ‡ãƒ«
 	Model* elementModelN_ = nullptr;
-	//Œ³‘fƒ‚ƒfƒ‹
+	//å…ƒç´ ãƒ¢ãƒ‡ãƒ«
 	Model* elementModelO_ = nullptr;
+
+	Input* input_ = nullptr;
+
+	int map_ = 0;
+
+	bool hitWall = false;
+	
+	bool clearFlag = false;
+
+	bool aa = false;
+
+	float maxframe = 60.0f;
+	float frame = maxframe;
+	float oneframe = 4.0f;
+
+	//å…ƒç´ ã«å½“ãŸã£ã¦ã„ã‚‹ã‹
+	bool elementWall = false;
 
 	//H
 	Object3d* HObj_ = nullptr;

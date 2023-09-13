@@ -1,16 +1,24 @@
 #pragma once
 #include "Object3d.h"
 #include "Model.h"
+#include "Input.h"
 
 class ElementH
 {
 public:
+	//向き
+	enum Direction {
+		Left,
+		Right,
+		Up,
+		Down,
+	};
 	ElementH();
 	~ElementH();
 
-	void Initialize(Model* elementModel, Vector3 elementPos, int connectMaxNmb,int elementNmb);
+	void Initialize(Model* elementModel, Vector3 elementPos, int connectMaxNmb,int elementNmb,Input* input,int map);
 
-	void Update(Vector3 playerPos);
+	void Update(Vector3 playerPos, bool hitBlocks);
 
 	void Draw();
 
@@ -30,6 +38,20 @@ public:
 	void TrueDeath() { isDeath = true; };
 
 	bool IsDeath() { return isDeath; }
+
+	bool BlockMove() { return hitBlock; }
+
+	Vector2 GetPlace() { return place; }
+
+	bool GetMoveOn() { return moveOn; }
+
+	void WallUpdate(bool elementHit);
+
+	//イージング
+	float easeOutCubic(float x) {
+		return 1 - (float)pow(1 - x, 3);
+	}
+	void HitElementTrue() { hitElement = true; }
 
 private:
 
@@ -55,4 +77,27 @@ private:
 
 	bool isDeath = false;
 
+	//現在のマス
+	Vector2 place = { 0,0 };
+
+	Input* input_ = nullptr;
+
+	bool hitBlock = false;
+
+	//イージング用フレーム
+	float maxframe = 60.0f;
+	float frame = maxframe;
+	float oneframe = 4.0f;
+	float intFlame = 0;
+
+	bool moveOn = false;
+
+	Vector3 worldPosition = { 0,0,15 };
+	Vector3 position = worldPosition;
+	//移動量
+	float moveVal = 1.0f;
+	//向き
+	Direction direction = Direction::Up;
+
+	bool hitElement = false;
 };

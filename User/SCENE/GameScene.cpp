@@ -97,7 +97,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	spriteCommon->LoadTexture(19, "CH4O.png");
 	CH4OSprite->SetTextureIndex(19);
 	//}
-	
+
 	//ステージ数
 	stage1Sprite->Initialize(spriteCommon);
 	stage1Sprite->SetPozition({ 50,50 });
@@ -147,16 +147,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	spriteCommon->LoadTexture(14, "stage8.png");
 	stage8Sprite->SetTextureIndex(14);
 
-	
+
 	// カメラ生成
 	mainCamera = new Camera(WinApp::window_width, WinApp::window_height);
 	camera1 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera2 = new Camera(WinApp::window_width, WinApp::window_height);
 	camera3 = new Camera(WinApp::window_width, WinApp::window_height);
-	mainCamera->SetEye({ -5.0f,-2.0f,5 });
-	mainCamera->SetTarget({ -5.0f,-0.0f,10 });
+	mainCamera->SetEye({ 2.0f,-3.0f,0 });
+	mainCamera->SetTarget({ 2.0f,-3.0f,10 });
 	mainCamera->Update();
-	
+
 	ParticleManager::SetCamera(mainCamera);
 	Object3d::SetCamera(mainCamera);
 	FBXObject3d::SetCamera(mainCamera);
@@ -171,25 +171,25 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 	block = Model::LoadFromOBJ("WoodenBox");
 
 
-	
+
 
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
 			obj[j][i] = new Object3d();
 			obj[j][i]->SetModel(p);
 			obj[j][i]->Initialize();
-			obj[j][i]->wtf.scale = {0.1f,0.1f,0.1f};
+			obj[j][i]->wtf.scale = { 0.1f,0.1f,0.1f };
 		}
 	}
 
 	//プレイヤー
 	player_ = new Player();
-	player_->Initialize(dxCommon, playerMD,input);
+	player_->Initialize(dxCommon, playerMD, input);
 	player_->Reset(map);
 	player_->SetCamera(mainCamera);
 
 	elementMna = new ElementManager();
-	elementMna->Initialize(input);
+	elementMna->Initialize(input, map);
 	elementMna->SetPlayer(player_);
 	elementMna->Reset(map);
 
@@ -201,7 +201,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input) {
 }
 
 void GameScene::Reset() {
-	
+
 }
 
 /// <summary>
@@ -215,8 +215,33 @@ void GameScene::Update() {
 		if (sceneNo_ == SceneNo::TITLE) {
 			//シーン切り替え
 			if (input->TriggerKey(DIK_SPACE) || input->ButtonInput(RT)) {
-				sceneNo_ = SceneNo::GAME;
+				sceneNo_ = SceneNo::STAGESELECT;
 			}
+		}
+		break;
+	case SceneNo::STAGESELECT:
+		if (input->TriggerKey(DIK_A)) {
+			if (stageNmb > 0) {
+				stageNmb--;
+			}
+		}
+		if (input->TriggerKey(DIK_D)) {
+			if (stageNmb < 8) {
+				stageNmb++;
+			}
+		}
+		if (input->TriggerKey(DIK_W)) {
+			if (stageNmb > 3) {
+				stageNmb -= 4;
+			}
+		}
+		if (input->TriggerKey(DIK_S)) {
+			if (stageNmb < 4) {
+				stageNmb += 4;
+			}
+		}
+		if (input->TriggerKey(DIK_SPACE)) {
+			sceneNo_ = SceneNo::GAME;
 		}
 		break;
 	case SceneNo::GAME:
@@ -227,60 +252,60 @@ void GameScene::Update() {
 					obj[i][j]->Update();
 				}
 			}
-      	for (int i = 0; i < 6; i++) {
-		for (int j = 0; j < 6; j++){
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 6; j++) {
 
-			//マップ更新
-			if (map == 0) {
-				baseMap[j][i] = tutorialMap[j][i];
-			}
-			else if (map == 1) {
-				baseMap[j][i] = map1[j][i];
-			}
-			else if (map == 2) {
-				baseMap[j][i] = map2[j][i];
+					//マップ更新
+					if (map == 0) {
+						baseMap[j][i] = tutorialMap[j][i];
+					}
+					else if (map == 1) {
+						baseMap[j][i] = map1[j][i];
+					}
+					else if (map == 2) {
+						baseMap[j][i] = map2[j][i];
+					}
+
+					obj[j][i]->wtf.position = { ((float)i) * 1.0f, (5.0f - (float)j) * 1.0f - 5.0f,15.0f };
+
+					if (baseMap[j][i] == 0) {
+						obj[j][i]->wtf.scale = { 0.1f,0.1f,0.1f };
+						obj[j][i]->SetModel(p);
+					}
+					if (baseMap[j][i] == 1) {
+						obj[j][i]->wtf.scale = { 0.5f,0.5f,0.5f };
+						obj[j][i]->SetModel(block);
+
+					}
+					obj[j][i]->Update();
+				}
 			}
 
-			obj[j][i]->wtf.position = { ((float)i) * 1.0f, (5.0f - (float)j) * 1.0f - 5.0f,15.0f };
-
-			if (baseMap[j][i] == 0) {
-				obj[j][i]->wtf.scale = { 0.1f,0.1f,0.1f };
-				obj[j][i]->SetModel(p);
+			//マップ切り替え
+			if (player_->GetFrame() >= 60) {
+				if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
+					stageCount++;
+					map++;
+					player_->Reset(map);
+					elementMna->Reset(map);
+				}
+				else if (input->TriggerKey(DIK_LEFT) && map > 0) {
+					stageCount--;
+					map--;
+					player_->Reset(map);
+					elementMna->Reset(map);
+				}
+				//位置リセット
+				if (input->TriggerKey(DIK_R)) {
+					player_->Reset(map);
+				}
 			}
-			if (baseMap[j][i] == 1) {
-				obj[j][i]->wtf.scale = { 0.5f,0.5f,0.5f };
-				obj[j][i]->SetModel(block);
-
+			if (stageCount >= 8) {
+				stageCount = 8;
 			}
-			obj[j][i]->Update();
-		}
-	}
-
-	//マップ切り替え
-	if (player_->GetFrame() >= 60) {
-		if (input->TriggerKey(DIK_RIGHT) && map < mapMax) {
-			stageCount++;
-			map++;
-			player_->Reset(map);
-			elementMna->Reset(map);
-		}
-		else if (input->TriggerKey(DIK_LEFT) && map > 0) {
-			stageCount--;
-			map--;
-			player_->Reset(map);
-			elementMna->Reset(map);
-		}
-		//位置リセット
-		if (input->TriggerKey(DIK_R)) {
-			player_->Reset(map);
-		}
-	}
-	if (stageCount >= 8) {
-		stageCount = 8;
-	}
-	else if (stageCount <= 0) {
-		stageCount = 1;
-	}
+			else if (stageCount <= 0) {
+				stageCount = 1;
+			}
 			player_->Update();
 
 			skydome->Update();
@@ -297,7 +322,7 @@ void GameScene::Update() {
 void GameScene::Draw() {
 	if (sceneNo_ == SceneNo::TITLE) {
 		titleSprite->Draw();
-	
+
 	}
 
 
@@ -362,7 +387,7 @@ void GameScene::Draw() {
 		//// パーティクル UI FBX スプライト描画
 		//player_->FbxDraw();
 	}
-	
+
 }
 
 Vector3 GameScene::bVelocity(Vector3& velocity, Transform& worldTransform)

@@ -76,7 +76,9 @@ private:	//メンバ変数
 	//シーン切り替え
 	enum class SceneNo {
 		TITLE, //タイトル
+		STAGESELECT,//ステージセレクト
 		GAME, //ゲームシーン
+		CLEAR,//クリア
 	};
 	//ゲーム制作中はgameシーンにする
 	SceneNo sceneNo_ = SceneNo::TITLE;
@@ -140,4 +142,6 @@ private:	//メンバ変数
 
 	int map = 0;
 	ElementManager* elementMna = nullptr;
+
+	int stageNmb = 0;
 };
